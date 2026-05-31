@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quran Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@500;700;800&family=Amiri:wght@400;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:         #EBE2D2;
+    --surface:    #FBF7EF;
+    --surface-2:  #F4ECDE;
+    --border:     #E3D8C4;
+    --border-2:   #EADFCC;
+    --ink:        #16130F;
+    --ink-2:      #3B362E;
+    --ink-3:      #8B8170;
+    --ink-4:      #B4A892;
+    --accent:     #16130F;
+    --gold:       #B68A46;
+    --gold-soft:  #EFE3CB;
+    --shadow:     0 10px 30px rgba(91,73,43,.10);
+    --shadow-sm:  0 4px 14px rgba(91,73,43,.06);
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 99;
+    opacity: 0.022;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .page { max-width: 1080px; margin: 0 auto; padding: 2.4rem 1.6rem 4rem; }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 1.8rem; gap: 1rem; flex-wrap: wrap;
+  }
+  .brand .bism {
+    font-family: 'Amiri', serif; font-size: 1.2rem; color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .brand .eyebrow {
+    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-4);
+  }
+  .brand h1 {
+    font-family: 'Outfit', sans-serif; font-weight: 800;
+    font-size: 2rem; letter-spacing: -0.01em; color: var(--ink); line-height: 1.05;
+    margin-top: 0.1rem;
+  }
+  .today-chip {
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: 0.82rem; color: var(--ink-2);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 0.55rem 1rem; box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+  }
+
+  /* ---------- bento ---------- */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .tile {
+    background: linear-gradient(160deg, #FFFCF6 0%, var(--surface) 42%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 1.4rem 1.4rem;
+    display: flex; flex-direction: column;
+    animation: rise .5s ease both;
+  }
+  .span2 { grid-column: span 2; }
+  .tile-label {
+    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.9rem;
+  }
+
+  /* hero */
+  .hero { justify-content: space-between; }
+  .hero .top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .hero .icon {
+    width: 54px; height: 54px; border-radius: 16px;
+    background: var(--surface-2); border: 1px solid var(--border-2);
+    display: flex; align-items: center; justify-content: center; color: var(--ink);
+  }
+  .hero .icon svg { width: 26px; height: 26px; }
+  .hero .big {
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    font-size: 4.6rem; line-height: 0.85; letter-spacing: -0.04em; color: var(--ink);
+    margin-top: 1.4rem;
+  }
+  .hero .cap {
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink-3); margin-top: 0.7rem;
+  }
+
+  /* stat tiles */
+  .stat { justify-content: center; align-items: flex-start; }
+  .stat .v {
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    font-size: 2.6rem; line-height: 0.9; color: var(--ink);
+  }
+  .stat .l {
+    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink-4); margin-top: 0.55rem;
+  }
+  .stat .glyph { font-size: 1.1rem; margin-bottom: auto; opacity: .55; }
+
+  /* quick actions */
+  .qa-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; flex: 1; }
+  .qa {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.45rem; padding: 1rem 0.5rem;
+    background: var(--surface-2); border: 1px solid var(--border-2);
+    border-radius: 16px; cursor: pointer; color: var(--ink-2);
+    font-family: 'Outfit', sans-serif; font-size: 0.74rem; font-weight: 700;
+    transition: all .16s; -webkit-tap-highlight-color: transparent; text-align: center;
+  }
+  .qa svg { width: 20px; height: 20px; }
+  .qa:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .qa:active { transform: scale(.96); }
+  .qa.gold:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* week chart */
+  .week { }
+  .bars { display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; flex: 1; min-height: 110px; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; flex: 1; height: 100%; justify-content: flex-end; }
+  .bar-track { width: 100%; max-width: 30px; display: flex; align-items: flex-end; justify-content: center; flex: 1; }
+  .bar {
+    width: 100%; max-width: 26px; border-radius: 7px 7px 4px 4px;
+    background: linear-gradient(180deg, var(--ink) 0%, #3a342b 100%);
+    min-height: 4px; transition: height .5s cubic-bezier(.2,.8,.2,1);
+    position: relative;
+  }
+  .bar.empty { background: var(--surface-2); border: 1px solid var(--border-2); }
+  .bar .n {
+    position: absolute; top: -1.1rem; left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; color: var(--ink-3);
+  }
+  .bar-day { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink-4); text-transform: uppercase; }
+  .bar-day.today { color: var(--gold); }
+
+  /* composer */
+  .composer .row-date { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+  .datequick { display: flex; gap: 0.35rem; }
+  .datequick button {
+    font-family: 'Outfit', sans-serif; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--ink-3); background: var(--surface-2); border: 1px solid var(--border-2);
+    border-radius: 100px; padding: 0.42rem 0.72rem; cursor: pointer; transition: all .16s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .datequick button:hover { border-color: var(--accent); color: var(--ink); }
+  .datequick button.on { background: var(--accent); color: #FBF7EF; border-color: var(--accent); }
+  .date-input {
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 12px;
+    padding: 0.55rem 0.75rem; outline: none; accent-color: var(--accent);
+  }
+  .date-input::-webkit-calendar-picker-indicator { opacity: .45; cursor: pointer; }
+  .text-input {
+    width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 14px;
+    padding: 0.8rem 0.9rem; outline: none; resize: none; line-height: 1.5; min-height: 60px;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .text-input::placeholder { color: var(--ink-4); }
+  .text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(22,19,15,.06); }
+  .row-video {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--border-2);
+  }
+  .row-video .vlabel { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; font-weight: 600; color: var(--ink-2); }
+  .row-video .vlabel svg { width: 16px; height: 16px; color: var(--ink-3); }
+  .stepper { display: flex; align-items: center; gap: 0.85rem; }
+  .stepper button {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-2);
+    background: var(--surface-2); color: var(--ink); font-size: 1.25rem; font-weight: 500;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform .12s, border-color .18s; -webkit-tap-highlight-color: transparent;
+  }
+  .stepper button:hover { border-color: var(--accent); }
+  .stepper button:active { transform: scale(.88); }
+  .stepper .vc { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.35rem; color: var(--ink); min-width: 1.5rem; text-align: center; }
+  .save {
+    width: 100%; margin-top: 1rem; font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #FBF7EF; background: var(--accent); border: none; border-radius: 14px;
+    padding: 0.9rem; cursor: pointer; transition: transform .12s, opacity .18s; -webkit-tap-highlight-color: transparent;
+  }
+  .save:hover { opacity: .9; } .save:active { transform: scale(.985); }
+
+  /* hadith of the day */
+  .hadith { position: relative; overflow: hidden; }
+  .hadith::before {
+    content: ''; position: absolute; right: -40px; top: -40px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(182,138,70,.10), transparent 70%);
+    pointer-events: none;
+  }
+  .hadith-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+  .hadith-head .tile-label { margin-bottom: 0; }
+  .refresh {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink-3);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all .2s; -webkit-tap-highlight-color: transparent;
+  }
+  .refresh svg { width: 15px; height: 15px; }
+  .refresh:hover { border-color: var(--gold); color: var(--gold); transform: rotate(40deg); }
+  .refresh:active { transform: rotate(180deg) scale(.9); }
+  .hadith-body { flex: 1; display: flex; flex-direction: column; justify-content: center; transition: opacity .25s ease; }
+  .hadith-body.fade { opacity: 0; }
+  .quote-mark {
+    font-family: 'Amiri', serif; font-size: 3.6rem; line-height: 0.5; color: var(--gold);
+    opacity: .55; height: 1.5rem; margin-bottom: 0.5rem;
+  }
+  .hadith-text {
+    font-family: 'DM Sans', sans-serif; font-size: 1.28rem; font-weight: 600;
+    line-height: 1.55; letter-spacing: -0.005em; color: var(--ink);
+  }
+  .hadith-src {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 0.8rem; flex-wrap: wrap; margin-top: 1.4rem;
+    padding-top: 1rem; border-top: 1px solid var(--border-2);
+  }
+  .hadith-src .who { display: flex; flex-direction: column; gap: 2px; }
+  .hadith-src .prophet { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .hadith-src .prophet .pbuh { font-family: 'Amiri', serif; color: var(--gold); font-size: 1.05rem; }
+  .hadith-src .narr { font-size: 0.7rem; font-weight: 600; color: var(--ink-4); }
+  .hadith-src .ref {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; font-weight: 700;
+    letter-spacing: 0.02em; text-transform: uppercase; color: var(--gold);
+    background: var(--gold-soft); border-radius: 100px; padding: 0.28rem 0.7rem; white-space: nowrap;
+  }
+
+  /* history */
+  .history { grid-column: span 4; }
+  .history .hh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .history .hh .tile-label { margin-bottom: 0; }
+  .tabs { display: inline-flex; gap: 3px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 13px; padding: 3px; }
+  .tabs button {
+    font-family: 'Outfit', sans-serif; font-size: 0.66rem; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+    background: transparent; border: none; border-radius: 10px; padding: 0.35rem 0.75rem;
+    cursor: pointer; transition: all .18s; -webkit-tap-highlight-color: transparent;
+  }
+  .tabs button.on { background: var(--accent); color: #FBF7EF; }
+
+  .viewtabs button.on { background: var(--gold); color: #FBF7EF; }
+  .hist-sub { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .cal-nav { display: flex; align-items: center; gap: 0.9rem; }
+  .cal-nav button {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border-2);
+    background: var(--surface-2); color: var(--ink-2); font-size: 1.1rem; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .16s;
+  }
+  .cal-nav button:hover { border-color: var(--accent); }
+  .cal-nav #calTitle {
+    font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--ink);
+    min-width: 8.5rem; text-align: center;
+  }
+
+  .log-scroll { max-height: 480px; overflow-y: auto; margin: 0 -0.4rem; padding: 0 0.4rem; }
+  .log-scroll::-webkit-scrollbar { width: 8px; }
+  .log-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+
+  /* list view */
+  .llist { display: flex; flex-direction: column; }
+  .lrow {
+    display: grid; grid-template-columns: 48px 1fr auto auto; gap: 0.9rem; align-items: center;
+    padding: 0.7rem 0.3rem; border-bottom: 1px solid var(--border-2); position: relative;
+    animation: rise .35s ease both;
+  }
+  .lrow:last-child { border-bottom: none; }
+  .lday { text-align: center; }
+  .lday .ln { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.05rem; color: var(--ink); display: block; line-height: 1; }
+  .lday .lmo { font-size: 0.52rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); }
+  .lmain { min-width: 0; }
+  .ldow { font-size: 0.54rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 1px; }
+  .ltext { font-size: 0.9rem; font-weight: 500; color: var(--ink-2); line-height: 1.35; word-wrap: break-word; }
+  .lrow.rest .ltext { color: var(--ink-4); font-style: italic; }
+  .lvid {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700;
+    color: #8A6526; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem;
+    background: var(--gold-soft); border-radius: 100px; padding: 0.22rem 0.55rem;
+  }
+  .lvid svg { width: 11px; height: 11px; }
+  .lvid .lt { color: #6E4F1C; opacity: .75; }
+  .lvid.none { background: transparent; color: var(--ink-4); padding-right: 0; }
+  .lacts { display: flex; gap: 0.25rem; opacity: 0.25; transition: opacity .18s; }
+  .lrow:hover .lacts { opacity: 1; }
+  .lacts button { width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--surface-2); color: var(--ink-3); cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .lacts .ed:hover { background: var(--accent); color: #FBF7EF; }
+  .lacts .dl:hover { background: #E9C9C0; color: #A1452E; }
+
+  /* calendar view */
+  .cal-dows { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.4rem; margin-bottom: 0.5rem; }
+  .cal-dows span { text-align: center; font-size: 0.56rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.4rem; }
+  .cal-cell {
+    aspect-ratio: 1 / 1; border-radius: 13px; border: 1px solid transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    position: relative; min-height: 44px;
+  }
+  .cal-cell.pad { visibility: hidden; }
+  .cal-cell .cd { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.82rem; color: var(--ink-4); }
+  .cal-cell.inmonth { cursor: pointer; }
+  .cal-cell.inmonth:hover { border-color: var(--border); background: var(--surface-2); }
+  .cal-cell.inmonth .cd { color: var(--ink-2); }
+  .cal-cell.logged { background: var(--surface-2); border-color: var(--border-2); }
+  .cal-cell.has-video { background: var(--gold-soft); border-color: #E6D2A8; }
+  .cal-cell.has-video .cd { color: #6E4F1C; }
+  .cal-cell .vbadge { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; font-weight: 800; color: #8A6526; line-height: 1; }
+  .cal-cell.rest { background: var(--surface-2); border-color: var(--border-2); }
+  .cal-cell .rdot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-4); }
+  .cal-cell .ckdot { color: var(--ink-3); display: flex; }
+  .cal-cell .ckdot svg { width: 11px; height: 11px; }
+  .cal-cell.today { box-shadow: 0 0 0 2px var(--accent); }
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border-2); }
+  .cal-legend span { display: flex; align-items: center; gap: 0.4rem; font-size: 0.64rem; font-weight: 600; color: var(--ink-3); }
+  .cal-legend .sw { width: 13px; height: 13px; border-radius: 5px; }
+  .cal-legend .sw.video { background: var(--gold-soft); border: 1px solid #E6D2A8; }
+  .cal-legend .sw.logged { background: var(--surface-2); border: 1px solid var(--border-2); }
+  .cal-legend .sw.today { box-shadow: 0 0 0 2px var(--accent); }
+
+  .month-label {
+    font-family: 'Outfit', sans-serif; font-size: 0.64rem; font-weight: 800;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+    margin: 1.2rem 0.2rem 0.6rem;
+  }
+  .month-label:first-child { margin-top: 0; }
+  .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+
+  .entry {
+    display: flex; gap: 0.85rem; background: var(--surface-2);
+    border: 1px solid var(--border-2); border-radius: 15px;
+    padding: 0.85rem 1rem; position: relative; animation: rise .4s ease both;
+  }
+  .entry .daycol { flex-shrink: 0; text-align: center; width: 38px; }
+  .entry .daynum { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.25rem; line-height: 1; color: var(--ink); }
+  .entry .daymon { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-top: 0.2rem; }
+  .entry .divider { width: 1px; background: var(--border); flex-shrink: 0; }
+  .entry .body { flex: 1; min-width: 0; padding-right: 1rem; }
+  .entry .dow { font-size: 0.56rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 0.2rem; }
+  .entry .text { font-size: 0.88rem; font-weight: 500; color: var(--ink-2); line-height: 1.4; word-wrap: break-word; }
+  .entry.rest .text { color: var(--ink-4); font-style: italic; }
+  .entry .vtag {
+    display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.5rem;
+    background: var(--gold-soft); color: #8A6526; border-radius: 100px;
+    padding: 0.22rem 0.55rem; font-size: 0.68rem; font-weight: 700;
+  }
+  .entry .vtag svg { width: 11px; height: 11px; }
+  .entry .vtag .tot { font-family: 'JetBrains Mono', monospace; color: #6E4F1C; }
+  .acts { position: absolute; top: 0.55rem; right: 0.55rem; display: flex; gap: 0.25rem; opacity: 0; transition: opacity .18s; }
+  .entry:hover .acts { opacity: 1; }
+  .acts button { width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--surface); color: var(--ink-3); cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .acts .ed:hover { background: var(--accent); color: #FBF7EF; }
+  .acts .dl:hover { background: #E9C9C0; color: #A1452E; }
+
+  .empty { grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; color: var(--ink-4); }
+  .empty svg { width: 32px; height: 32px; margin-bottom: 0.6rem; }
+  .empty p { font-size: 0.9rem; font-weight: 500; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 1.5rem; transform: translateX(-50%) translateY(150%);
+    background: var(--accent); color: #FBF7EF; font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem; font-weight: 700; padding: 0.75rem 1.3rem; border-radius: 100px;
+    box-shadow: 0 12px 30px rgba(22,19,15,.28); display: flex; align-items: center; gap: 0.5rem;
+    transition: transform .4s cubic-bezier(.2,.8,.2,1); z-index: 100;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast svg { width: 14px; height: 14px; }
+
+  /* hero dual metric */
+  .hero-duo { display: flex; align-items: stretch; gap: 1.3rem; height: 100%; }
+  .hstat { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .hstat .big { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 3.1rem; line-height: 0.85; letter-spacing: -0.04em; color: var(--ink); }
+  .hstat .cap { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3); margin-top: 0.6rem; }
+  .hstat .cap .ar { font-family: 'Amiri', serif; font-size: 1.2em; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  .hdiv { width: 1px; background: var(--border-2); align-self: stretch; margin: 0.3rem 0; }
+  .vlabel .ar { font-family: 'Amiri', serif; font-size: 1.05rem; }
+  .qa .ar { font-family: 'Amiri', serif; font-size: 1rem; }
+
+  /* quick actions 2x2 */
+  .qa-grid { grid-template-columns: 1fr 1fr; }
+
+  /* weekly checklist */
+  .weekly { grid-column: span 4; }
+  .weekly-head { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
+  .weekly-head .left { display: flex; align-items: center; gap: 0.8rem; }
+  .weekly-head .tile-label { margin-bottom: 0; }
+  .wk-progress { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.74rem; color: #8A6526; background: var(--gold-soft); border-radius: 100px; padding: 0.28rem 0.7rem; }
+  .wk-nav { display: flex; align-items: center; gap: 0.7rem; }
+  .wk-nav button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink-2); font-size: 1.05rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .16s; }
+  .wk-nav button:hover { border-color: var(--accent); }
+  .wk-range { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; color: var(--ink); min-width: 9rem; text-align: center; }
+  .wtasks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; }
+  .wchip { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; padding: 1.1rem 0.6rem; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 16px; cursor: pointer; transition: all .16s; -webkit-tap-highlight-color: transparent; }
+  .wchip .wbox { width: 24px; height: 24px; border-radius: 8px; border: 2px solid var(--ink-4); display: flex; align-items: center; justify-content: center; transition: all .18s; }
+  .wchip .wbox svg { width: 13px; height: 13px; opacity: 0; transition: opacity .15s; }
+  .wchip .wlab { font-family: 'Outfit', sans-serif; font-size: 0.74rem; font-weight: 700; color: var(--ink-2); line-height: 1.25; }
+  .wchip .wlab .ar { font-family: 'Amiri', serif; font-weight: 400; color: var(--ink-3); display: block; font-size: 0.92rem; margin-top: 1px; }
+  .wchip:hover { border-color: var(--accent); }
+  .wchip.on { background: var(--gold-soft); border-color: #E6D2A8; }
+  .wchip.on .wbox { background: var(--gold); border-color: var(--gold); }
+  .wchip.on .wbox svg { opacity: 1; }
+
+  /* footer backup */
+  .footer { display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.6rem; }
+  .fbtn { display: inline-flex; align-items: center; gap: 0.45rem; font-family: 'Outfit', sans-serif; font-size: 0.74rem; font-weight: 700; color: var(--ink-2); background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 0.55rem 1rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: all .16s; -webkit-tap-highlight-color: transparent; }
+  .fbtn:hover { border-color: var(--accent); color: var(--ink); }
+  .fbtn svg { width: 14px; height: 14px; }
+  .fnote { width: 100%; text-align: center; font-size: 0.66rem; color: var(--ink-4); margin-top: 0.4rem; }
+
+  /* wird tags in history */
+  .lpills { display: flex; align-items: center; gap: 0.4rem; }
+  .lwird { display: inline-flex; align-items: center; gap: 0.3rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 100px; padding: 0.2rem 0.5rem; white-space: nowrap; }
+  .lwird svg { width: 11px; height: 11px; color: var(--ink-3); }
+  .wtag { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.5rem; margin-left: 0.4rem; background: var(--surface-2); border: 1px solid var(--border-2); color: var(--ink-2); border-radius: 100px; padding: 0.22rem 0.55rem; font-size: 0.68rem; font-weight: 700; }
+  .wtag svg { width: 11px; height: 11px; color: var(--ink-3); }
+  .cal-cell .wbadge { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; font-weight: 800; color: var(--ink-3); line-height: 1; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .span2 { grid-column: span 2; }
+    .history, .weekly { grid-column: span 2; }
+    .hstat .big { font-size: 3rem; }
+    .log-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .page { padding: 1.8rem 1rem 3rem; }
+    .bento { grid-template-columns: 1fr; gap: 0.8rem; }
+    .span2, .history, .weekly { grid-column: span 1; }
+    .brand h1 { font-size: 1.6rem; }
+    .hstat .big { font-size: 2.7rem; }
+    .qa-grid { grid-template-columns: 1fr 1fr; }
+    .wtasks { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- top bar -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="bism">﷽</div>
+      <div class="eyebrow">Daily Quran Log</div>
+      <h1>Quran Tracker</h1>
+    </div>
+    <div class="today-chip" id="todayChip">—</div>
+  </div>
+
+  <!-- bento dashboard -->
+  <div class="bento">
+
+    <!-- hero: video + wird totals -->
+    <div class="tile hero span2">
+      <div class="hero-duo">
+        <div class="hstat">
+          <div class="big" id="vidTotal">0</div>
+          <div class="cap">Videos watched</div>
+        </div>
+        <div class="hdiv"></div>
+        <div class="hstat">
+          <div class="big" id="wirdTotal">0</div>
+          <div class="cap"><span class="ar">ورد سمعي</span> listens</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- streak -->
+    <div class="tile stat">
+      <div class="glyph">🔥</div>
+      <div class="v" id="streak">0</div>
+      <div class="l">Day streak</div>
+    </div>
+
+    <!-- days -->
+    <div class="tile stat">
+      <div class="glyph">📖</div>
+      <div class="v" id="daysLogged">0</div>
+      <div class="l">Days logged</div>
+    </div>
+
+    <!-- quick actions -->
+    <div class="tile span2">
+      <div class="tile-label">Quick actions</div>
+      <div class="qa-grid">
+        <button class="qa gold" id="qaWird">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 13v-1a7 7 0 0114 0v1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="3.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/></svg>
+          +1 <span class="ar">ورد سمعي</span>
+        </button>
+        <button class="qa gold" id="qaVideo">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 9.5L15 12L10 14.5V9.5Z" fill="currentColor"/></svg>
+          +1 video
+        </button>
+        <button class="qa" id="qaClass">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 9.5V14c0 1.1 2.2 2 5 2s5-.9 5-2V9.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          Class day
+        </button>
+        <button class="qa" id="qaRest">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 4a8 8 0 108 8 6 6 0 01-8-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Rest day
+        </button>
+      </div>
+    </div>
+
+    <!-- this week -->
+    <div class="tile span2 week">
+      <div class="tile-label">This week</div>
+      <div class="bars" id="weekBars"></div>
+    </div>
+
+    <!-- composer -->
+    <div class="tile span2 composer">
+      <div class="tile-label">Log a day</div>
+      <div class="row-date">
+        <input type="date" class="date-input" id="entryDate">
+        <div class="datequick">
+          <button data-off="-1">Yesterday</button>
+          <button data-off="0">Today</button>
+          <button data-off="1">Tomorrow</button>
+        </div>
+      </div>
+      <textarea class="text-input" id="entryText" placeholder="What did you do? e.g. class summary + video watched"></textarea>
+      <div class="row-video">
+        <span class="vlabel">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.5L15 12L10 14.5V9.5Z" fill="currentColor"/></svg>
+          Videos this day
+        </span>
+        <div class="stepper">
+          <button id="vMinus" aria-label="less">&minus;</button>
+          <span class="vc" id="vCount">0</span>
+          <button id="vPlus" aria-label="more">+</button>
+        </div>
+      </div>
+      <div class="row-video">
+        <span class="vlabel">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 13v-1a7 7 0 0114 0v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/></svg>
+          <span class="ar">ورد سمعي</span> listens
+        </span>
+        <div class="stepper">
+          <button id="wMinus" aria-label="less">&minus;</button>
+          <span class="vc" id="wCount">0</span>
+          <button id="wPlus" aria-label="more">+</button>
+        </div>
+      </div>
+      <button class="save" id="saveBtn">Save day</button>
+    </div>
+
+    <!-- hadith of the day -->
+    <div class="tile span2 hadith">
+      <div class="hadith-head">
+        <div class="tile-label">Hadith of the day</div>
+        <button class="refresh" id="hadithNext" title="Show another hadith" aria-label="Another hadith">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 11A8 8 0 105.6 6.5M20 4v4h-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="hadith-body" id="hadithBody">
+        <div class="quote-mark">&#8220;</div>
+        <p class="hadith-text" id="hadithText"></p>
+        <div class="hadith-src">
+          <div class="who">
+            <span class="prophet">Prophet Muhammad <span class="pbuh">&#65018;</span></span>
+            <span class="narr" id="hadithNarr"></span>
+          </div>
+          <span class="ref" id="hadithRef"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- weekly course tasks -->
+    <div class="tile weekly">
+      <div class="weekly-head">
+        <div class="left">
+          <div class="tile-label">This week's tasks</div>
+          <span class="wk-progress" id="wkProgress">0/5</span>
+        </div>
+        <div class="wk-nav">
+          <button id="wkPrev" aria-label="Previous week">&lsaquo;</button>
+          <span class="wk-range" id="wkRange">—</span>
+          <button id="wkNext" aria-label="Next week">&rsaquo;</button>
+        </div>
+      </div>
+      <div class="wtasks" id="wtasks"></div>
+    </div>
+
+    <!-- history -->
+    <div class="tile history">
+      <div class="hh">
+        <div class="tile-label">History</div>
+        <div class="tabs viewtabs" id="viewTabs">
+          <button class="on" data-v="list">List</button>
+          <button data-v="cards">Cards</button>
+          <button data-v="calendar">Calendar</button>
+        </div>
+      </div>
+      <div class="hist-sub">
+        <div class="tabs" id="rangeTabs">
+          <button class="on" data-f="all">All</button>
+          <button data-f="month">Month</button>
+          <button data-f="week">Week</button>
+        </div>
+        <div class="cal-nav" id="calNav" hidden>
+          <button id="calPrev" aria-label="Previous month">&lsaquo;</button>
+          <span id="calTitle">—</span>
+          <button id="calNext" aria-label="Next month">&rsaquo;</button>
+        </div>
+      </div>
+      <div class="log-scroll" id="logScroll"></div>
+    </div>
+
+  </div>
+
+  <!-- backup & restore -->
+  <div class="footer">
+    <button class="fbtn" id="exportBtn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v3h16v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> Export backup</button>
+    <button class="fbtn" id="importBtn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15V3m0 0l-4 4m4-4l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v3h16v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> Import</button>
+    <button class="fbtn" id="copyBtn"><svg viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M4 16V5a1 1 0 011-1h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> Copy as text</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+    <span class="fnote">Saved on this device only — export a backup to keep it safe or move to another device.</span>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span id="toastMsg">Saved</span>
+</div>
+
+<script>
+const KEY = 'quran-tracker-log';
+const WKEY = 'quran-tracker-weekly';
+let videos = 0;
+let wird = 0;
+let filter = 'all';
+let view = 'list';
+let calMonth = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
+const $ = id => document.getElementById(id);
+
+/* weekly course tasks (reset each week) */
+const WTASKS = [
+  { id: 'tasmee',  label: 'Sunday class', ar: 'تسميع' },
+  { id: 'recap',   label: 'Recording summary' },
+  { id: 'tajweed', label: 'Tajweed lecture' },
+  { id: 'tajsum',  label: 'Tajweed summary' },
+  { id: 'test',    label: 'Tajweed test' },
+];
+function mondayOf(date) { const d = new Date(date); d.setHours(0,0,0,0); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d; }
+let weekStart = mondayOf(new Date());
+const wLoad  = () => { try { return JSON.parse(localStorage.getItem(WKEY)) || {}; } catch { return {}; } };
+const wStore = d => localStorage.setItem(WKEY, JSON.stringify(d));
+
+/* Authentic hadiths — Sahih al-Bukhari & Sahih Muslim only */
+const HADITHS = [
+  { t: "Actions are but by intentions, and every person will have only what they intended.", n: "Umar ibn al-Khattab", r: "Sahih al-Bukhari 1" },
+  { t: "The best of you are those who learn the Qur'an and teach it.", n: "Uthman ibn Affan", r: "Sahih al-Bukhari 5027" },
+  { t: "The one who is skilled in the Qur'an will be with the noble, righteous scribes (angels); and the one who recites it with difficulty, stumbling over it, will have a double reward.", n: "Aisha", r: "Sahih al-Bukhari 4937 · Muslim 798" },
+  { t: "None of you truly believes until he loves for his brother what he loves for himself.", n: "Anas ibn Malik", r: "Sahih al-Bukhari 13 · Muslim 45" },
+  { t: "Whoever believes in Allah and the Last Day, let him speak good or remain silent.", n: "Abu Hurayrah", r: "Sahih al-Bukhari 6018 · Muslim 47" },
+  { t: "The most beloved of deeds to Allah are those done consistently, even if they are few.", n: "Aisha", r: "Sahih al-Bukhari 6464 · Muslim 783" },
+  { t: "The strong person is not the one who overcomes people by his strength, but the one who controls himself while in anger.", n: "Abu Hurayrah", r: "Sahih al-Bukhari 6114" },
+  { t: "Whoever does not show mercy to people, Allah will not show mercy to him.", n: "Jarir ibn Abdullah", r: "Sahih al-Bukhari 7376 · Muslim 2319" },
+  { t: "Indeed Allah does not look at your bodies or your forms, but He looks at your hearts and your deeds.", n: "Abu Hurayrah", r: "Sahih Muslim 2564" },
+  { t: "Whoever follows a path in pursuit of knowledge, Allah will make easy for him a path to Paradise.", n: "Abu Hurayrah", r: "Sahih Muslim 2699" },
+  { t: "Purity is half of faith.", n: "Abu Malik al-Ash'ari", r: "Sahih Muslim 223" },
+  { t: "When a person dies, his deeds end except for three: ongoing charity, knowledge that is benefited from, or a righteous child who prays for him.", n: "Abu Hurayrah", r: "Sahih Muslim 1631" },
+  { t: "Make things easy and do not make them difficult; give glad tidings and do not repel people.", n: "Anas ibn Malik", r: "Sahih al-Bukhari 69" },
+  { t: "The Muslim is the one from whose tongue and hand other Muslims are safe.", n: "Abdullah ibn Amr", r: "Sahih al-Bukhari 10" },
+  { t: "A good word is charity.", n: "Abu Hurayrah", r: "Sahih al-Bukhari 2989 · Muslim 1009" },
+];
+let hadithIdx = 0;
+
+const load  = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+const store = d => localStorage.setItem(KEY, JSON.stringify(d));
+
+function todayStr() { const d=new Date(); const o=d.getTimezoneOffset(); return new Date(d-o*60000).toISOString().slice(0,10); }
+function iso(d){ const o=d.getTimezoneOffset(); return new Date(d-o*60000).toISOString().slice(0,10); }
+
+function init() {
+  $('entryDate').value = todayStr();
+  updateDateQuick();
+  $('todayChip').textContent = new Date().toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long' });
+  $('vPlus').onclick  = () => { videos++; $('vCount').textContent = videos; };
+  $('vMinus').onclick = () => { videos = Math.max(0, videos-1); $('vCount').textContent = videos; };
+  $('wPlus').onclick  = () => { wird++; $('wCount').textContent = wird; };
+  $('wMinus').onclick = () => { wird = Math.max(0, wird-1); $('wCount').textContent = wird; };
+  $('entryDate').onchange = () => loadInto($('entryDate').value);
+  document.querySelectorAll('.datequick button').forEach(b => b.onclick = () => {
+    const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + parseInt(b.dataset.off,10));
+    const ds = iso(d);
+    $('entryDate').value = ds;
+    loadInto(ds);
+  });
+  $('saveBtn').onclick = save;
+  $('qaWird').onclick  = quickWird;
+  $('qaVideo').onclick = quickVideo;
+  $('qaRest').onclick  = () => quickText('Rest day', true);
+  $('qaClass').onclick = () => quickText('Class', false);
+
+  // weekly checklist
+  $('wkPrev').onclick = () => { weekStart = new Date(weekStart); weekStart.setDate(weekStart.getDate()-7); renderWeekly(); };
+  $('wkNext').onclick = () => { weekStart = new Date(weekStart); weekStart.setDate(weekStart.getDate()+7); renderWeekly(); };
+  $('wtasks').addEventListener('click', e => {
+    const c = e.target.closest('.wchip'); if (!c) return;
+    const key = iso(weekStart); const data = wLoad(); const wk = data[key] || {};
+    wk[c.dataset.id] = !wk[c.dataset.id]; data[key] = wk; wStore(data); renderWeekly();
+  });
+
+  // backup & restore
+  $('exportBtn').onclick = exportBackup;
+  $('copyBtn').onclick   = copyAsText;
+  $('importBtn').onclick = () => $('importFile').click();
+  $('importFile').onchange = e => { if (e.target.files[0]) importBackup(e.target.files[0]); e.target.value = ''; };
+  document.querySelectorAll('#rangeTabs button').forEach(b => b.onclick = () => {
+    filter = b.dataset.f;
+    document.querySelectorAll('#rangeTabs button').forEach(x => x.classList.toggle('on', x===b));
+    render();
+  });
+  document.querySelectorAll('#viewTabs button').forEach(b => b.onclick = () => {
+    view = b.dataset.v;
+    document.querySelectorAll('#viewTabs button').forEach(x => x.classList.toggle('on', x===b));
+    updateHistChrome();
+    render();
+  });
+  $('calPrev').onclick = () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()-1, 1); render(); };
+  $('calNext').onclick = () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()+1, 1); render(); };
+  updateHistChrome();
+
+  // hadith of the day — deterministic per calendar day, with manual cycle
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((new Date() - start) / 86400000);
+  hadithIdx = dayOfYear % HADITHS.length;
+  renderHadith();
+  $('hadithNext').onclick = () => { hadithIdx = (hadithIdx + 1) % HADITHS.length; renderHadith(true); };
+
+  renderWeekly();
+  renderAll();
+}
+
+function renderHadith(animate) {
+  const body = $('hadithBody');
+  const set = () => {
+    const h = HADITHS[hadithIdx];
+    $('hadithText').textContent = h.t;
+    $('hadithNarr').textContent = 'Narrated by ' + h.n;
+    $('hadithRef').textContent = h.r;
+  };
+  if (animate) {
+    body.classList.add('fade');
+    setTimeout(() => { set(); body.classList.remove('fade'); }, 220);
+  } else { set(); }
+}
+
+function renderAll(){ render(); stats(); weekChart(); }
+
+function loadInto(date) {
+  const e = load().find(x => x.date === date);
+  if (e) { $('entryText').value = e.text || ''; videos = e.videos || 0; wird = e.wird || 0; }
+  else   { $('entryText').value = ''; videos = 0; wird = 0; }
+  $('vCount').textContent = videos;
+  $('wCount').textContent = wird;
+  updateDateQuick();
+}
+
+function updateDateQuick() {
+  const v = $('entryDate').value;
+  const today = new Date(); today.setHours(0,0,0,0);
+  document.querySelectorAll('.datequick button').forEach(b => {
+    const d = new Date(today); d.setDate(d.getDate() + parseInt(b.dataset.off,10));
+    b.classList.toggle('on', iso(d) === v);
+  });
+}
+
+function upsert(date, mut) {
+  const data = load();
+  const i = data.findIndex(x => x.date === date);
+  let entry = i >= 0 ? data[i] : { date, text:'', videos:0 };
+  mut(entry);
+  if (i >= 0) data[i] = entry; else data.push(entry);
+  data.sort((a,b) => b.date.localeCompare(a.date));
+  store(data);
+}
+
+function save() {
+  const date = $('entryDate').value;
+  const text = $('entryText').value.trim();
+  if (!date) { toast('Pick a date'); return; }
+  if (!text && !videos && !wird) { toast('Write what you did'); return; }
+  const existed = load().some(x => x.date === date);
+  const fallback = videos ? 'Video watched' : (wird ? 'ورد سمعي listened' : '');
+  upsert(date, e => { e.text = text || fallback; e.videos = videos; e.wird = wird; });
+  $('entryText').value = ''; videos = 0; wird = 0; $('vCount').textContent = 0; $('wCount').textContent = 0;
+  $('entryDate').value = todayStr();
+  updateDateQuick();
+  renderAll();
+  toast(existed ? 'Updated' : 'Saved');
+}
+
+/* quick actions act on TODAY */
+function quickWird() {
+  upsert(todayStr(), e => { e.wird = (e.wird||0) + 1; if (!e.text) e.text = 'ورد سمعي listened'; });
+  if ($('entryDate').value === todayStr()) loadInto(todayStr());
+  renderAll(); toast('+1 ورد سمعي today');
+}
+function quickVideo() {
+  upsert(todayStr(), e => { e.videos = (e.videos||0) + 1; if (!e.text) e.text = 'Video watched'; });
+  if ($('entryDate').value === todayStr()) loadInto(todayStr());
+  renderAll(); toast('+1 video today');
+}
+function quickText(label, isRest) {
+  upsert(todayStr(), e => {
+    if (isRest) { e.text = 'Rest day'; }
+    else if (!e.text || /^rest/i.test(e.text)) { e.text = label; }
+    else if (!new RegExp(label,'i').test(e.text)) { e.text = e.text + ' + ' + label.toLowerCase(); }
+  });
+  if ($('entryDate').value === todayStr()) loadInto(todayStr());
+  renderAll(); toast(isRest ? 'Marked rest day' : label + ' logged');
+}
+
+function editEntry(date) { $('entryDate').value = date; loadInto(date); window.scrollTo({top:0,behavior:'smooth'}); }
+function delEntry(date) { store(load().filter(x => x.date !== date)); renderAll(); toast('Deleted'); }
+
+function inFilter(date) {
+  if (filter === 'all') return true;
+  const n = filter === 'week' ? 7 : 31;
+  const lim = new Date(); lim.setHours(0,0,0,0); lim.setDate(lim.getDate()-n+1);
+  return new Date(date+'T00:00:00') >= lim;
+}
+
+function updateHistChrome() {
+  const cal = view === 'calendar';
+  $('rangeTabs').style.display = cal ? 'none' : '';
+  $('calNav').hidden = !cal;
+}
+
+function runningTotals(all) {
+  const asc = [...all].sort((a,b) => a.date.localeCompare(b.date));
+  const rt = {}; let run = 0;
+  asc.forEach(e => { run += (e.videos||0); rt[e.date] = run; });
+  return rt;
+}
+
+function render() {
+  const all = load();
+  const runTotal = runningTotals(all);
+  if (view === 'calendar') { renderCalendar(all, runTotal); return; }
+
+  const data = all.filter(e => inFilter(e.date));
+  const box = $('logScroll');
+  if (!data.length) {
+    box.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 11h6M9 14h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><p>No days logged yet — use Quick actions or Log a day.</p></div>`;
+    return;
+  }
+  box.innerHTML = (view === 'list') ? listHtml(data, runTotal) : cardsHtml(data, runTotal);
+}
+
+function listHtml(data, runTotal) {
+  let html = '<div class="llist">', lastMonth = null, delay = 0;
+  for (const e of data) {
+    const d = new Date(e.date+'T00:00:00');
+    const monthKey = d.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+    if (monthKey !== lastMonth) { html += `<div class="month-label">${monthKey}</div>`; lastMonth = monthKey; }
+    const isRest = /^rest/i.test(e.text||'');
+    const vid = e.videos ? `<span class="lvid">${vidIcon()} +${e.videos} <span class="lt">· ${runTotal[e.date]}</span></span>` : '';
+    const wd  = e.wird ? `<span class="lwird">${hpIcon()} ${e.wird}×</span>` : '';
+    const pills = (vid || wd) ? `<div class="lpills">${wd}${vid}</div>` : `<span class="lvid none">—</span>`;
+    html += `
+      <div class="lrow ${isRest?'rest':''}" style="animation-delay:${delay}ms">
+        <div class="lday"><span class="ln">${d.getDate()}</span><span class="lmo">${d.toLocaleDateString('en-GB',{month:'short'})}</span></div>
+        <div class="lmain">
+          <div class="ldow">${d.toLocaleDateString('en-GB',{weekday:'long'})}</div>
+          <div class="ltext">${esc(e.text||'')}</div>
+        </div>
+        ${pills}
+        <div class="lacts">
+          <button class="ed" title="Edit" onclick="editEntry('${e.date}')">✎</button>
+          <button class="dl" title="Delete" onclick="delEntry('${e.date}')">×</button>
+        </div>
+      </div>`;
+    delay += 22;
+  }
+  return html + '</div>';
+}
+
+function cardsHtml(data, runTotal) {
+  let html = '<div class="log-grid">', lastMonth = null, delay = 0;
+  for (const e of data) {
+    const d = new Date(e.date+'T00:00:00');
+    const monthKey = d.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+    if (monthKey !== lastMonth) { html += `<div class="month-label" style="grid-column:1/-1">${monthKey}</div>`; lastMonth = monthKey; }
+    const isRest = /^rest/i.test(e.text||'');
+    const vtag = e.videos ? `<span class="vtag">${vidIcon()} +${e.videos} <span class="tot">· ${runTotal[e.date]} total</span></span>` : '';
+    const wtag = e.wird ? `<span class="wtag">${hpIcon()} ${e.wird}× <span style="opacity:.7">ورد</span></span>` : '';
+    html += `
+      <div class="entry ${isRest?'rest':''}" style="animation-delay:${delay}ms">
+        <div class="acts">
+          <button class="ed" title="Edit" onclick="editEntry('${e.date}')">✎</button>
+          <button class="dl" title="Delete" onclick="delEntry('${e.date}')">×</button>
+        </div>
+        <div class="daycol"><div class="daynum">${d.getDate()}</div><div class="daymon">${d.toLocaleDateString('en-GB',{month:'short'})}</div></div>
+        <div class="divider"></div>
+        <div class="body">
+          <div class="dow">${d.toLocaleDateString('en-GB',{weekday:'long'})}</div>
+          <div class="text">${esc(e.text||'')}</div>
+          ${vtag}${wtag}
+        </div>
+      </div>`;
+    delay += 30;
+  }
+  return html + '</div>';
+}
+
+function renderCalendar(all, runTotal) {
+  const map = {}; all.forEach(e => map[e.date] = e);
+  const y = calMonth.getFullYear(), m = calMonth.getMonth();
+  $('calTitle').textContent = calMonth.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+
+  const first = new Date(y, m, 1);
+  const startPad = (first.getDay() + 6) % 7;        // Monday-start
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const tStr = todayStr();
+
+  const dows = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  let html = '<div class="cal-dows">' + dows.map(d => `<span>${d}</span>`).join('') + '</div>';
+  html += '<div class="cal-grid">';
+  for (let i = 0; i < startPad; i++) html += `<div class="cal-cell pad"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const ds = iso(new Date(y, m, day));
+    const e = map[ds];
+    const isToday = ds === tStr;
+    const isRest = e && /^rest/i.test(e.text||'');
+    const hasVid = e && e.videos > 0;
+    const hasWird = e && e.wird > 0;
+    let cls = 'cal-cell inmonth';
+    if (hasVid) cls += ' has-video'; else if (e) cls += isRest ? ' rest' : ' logged';
+    if (isToday) cls += ' today';
+    let mark = '';
+    if (hasVid) mark = `<span class="vbadge">+${e.videos}</span>`;
+    else if (hasWird) mark = `<span class="wbadge">${e.wird}× ورد</span>`;
+    else if (isRest) mark = `<span class="rdot"></span>`;
+    else if (e) mark = `<span class="ckdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2L5 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    const extras = [];
+    if (e && e.videos) extras.push(`+${e.videos} videos`);
+    if (e && e.wird) extras.push(`${e.wird}× ورد سمعي`);
+    const title = e ? `${esc(e.text||'')}${extras.length?` (${extras.join(', ')})`:''}` : 'Tap to log this day';
+    html += `<div class="${cls}" title="${title}" onclick="editEntry('${ds}')"><span class="cd">${day}</span>${mark}</div>`;
+  }
+  html += '</div>';
+  html += `<div class="cal-legend">
+    <span><span class="sw video"></span>Video day</span>
+    <span><span class="sw logged"></span>Logged / rest</span>
+    <span><span class="sw today"></span>Today</span>
+  </div>`;
+  $('logScroll').innerHTML = html;
+}
+
+function stats() {
+  const data = load();
+  $('vidTotal').textContent  = data.reduce((s,e)=>s+(e.videos||0),0);
+  $('wirdTotal').textContent = data.reduce((s,e)=>s+(e.wird||0),0);
+  $('daysLogged').textContent = data.length;
+  $('streak').textContent = streak(data);
+}
+function streak(data) {
+  if (!data.length) return 0;
+  const set = new Set(data.map(e=>e.date));
+  let n = 0; const cur = new Date(); cur.setHours(0,0,0,0);
+  if (!set.has(iso(cur))) cur.setDate(cur.getDate()-1);
+  while (set.has(iso(cur))) { n++; cur.setDate(cur.getDate()-1); }
+  return n;
+}
+
+function weekChart() {
+  const map = {}; load().forEach(e => map[e.date] = e.videos||0);
+  const days = [];
+  for (let i=6; i>=0; i--) { const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-i); days.push(d); }
+  const max = Math.max(1, ...days.map(d => map[iso(d)]||0));
+  const tStr = todayStr();
+  $('weekBars').innerHTML = days.map(d => {
+    const v = map[iso(d)]||0;
+    const h = v ? Math.round(18 + (v/max)*82) : 0;
+    const isToday = iso(d) === tStr;
+    return `<div class="bar-col">
+      <div class="bar-track"><div class="bar ${v?'':'empty'}" style="height:${v?h:14}%">${v?`<span class="n">${v}</span>`:''}</div></div>
+      <div class="bar-day ${isToday?'today':''}">${d.toLocaleDateString('en-GB',{weekday:'short'}).slice(0,2)}</div>
+    </div>`;
+  }).join('');
+}
+
+function vidIcon(){ return `<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 9.5L15 12L10 14.5V9.5Z" fill="currentColor"/></svg>`; }
+function hpIcon(){ return `<svg viewBox="0 0 24 24" fill="none"><path d="M5 13v-1a7 7 0 0114 0v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.5" y="13" width="4" height="6.2" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4" height="6.2" rx="1.6" fill="currentColor"/></svg>`; }
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+/* ---------- weekly checklist ---------- */
+function renderWeekly() {
+  const key = iso(weekStart);
+  const end = new Date(weekStart); end.setDate(end.getDate()+6);
+  const done = wLoad()[key] || {};
+  const count = WTASKS.filter(t => done[t.id]).length;
+  $('wkRange').textContent = `${weekStart.toLocaleDateString('en-GB',{day:'numeric',month:'short'})} – ${end.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
+  $('wkProgress').textContent = `${count}/${WTASKS.length}`;
+  $('wtasks').innerHTML = WTASKS.map(t => `
+    <button class="wchip ${done[t.id]?'on':''}" data-id="${t.id}">
+      <span class="wbox"><svg viewBox="0 0 12 12" fill="none"><path d="M2.2 6L4.8 8.6L9.8 3.2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="wlab">${t.label}${t.ar?`<span class="ar">${t.ar}</span>`:''}</span>
+    </button>`).join('');
+}
+
+/* ---------- backup & restore ---------- */
+function exportBackup() {
+  const payload = { app:'quran-tracker', version:1, exportedAt:new Date().toISOString(), log:load(), weekly:wLoad() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `quran-tracker-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Backup downloaded');
+}
+function importBackup(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const log = Array.isArray(data) ? data : data.log;
+      if (!Array.isArray(log)) { toast('Not a valid backup file'); return; }
+      if (!confirm('Restore this backup? It will replace your current log on this device.')) return;
+      store(log);
+      if (data && data.weekly) wStore(data.weekly);
+      renderWeekly(); renderAll();
+      $('entryDate').value = todayStr(); loadInto(todayStr());
+      toast('Backup restored');
+    } catch { toast('Could not read that file'); }
+  };
+  reader.readAsText(file);
+}
+function copyAsText() {
+  const all = load();
+  if (!all.length) { toast('Nothing to copy yet'); return; }
+  const asc = [...all].sort((a,b) => a.date.localeCompare(b.date));
+  const rt = runningTotals(all);
+  const lines = asc.map(e => {
+    const d = new Date(e.date+'T00:00:00');
+    let line = `${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})} - ${e.text||''}`;
+    const ex = [];
+    if (e.videos) ex.push(`videos +${e.videos}, total ${rt[e.date]}`);
+    if (e.wird)   ex.push(`ورد سمعي ×${e.wird}`);
+    if (ex.length) line += ` (${ex.join('; ')})`;
+    return line;
+  });
+  const text = lines.join('\n');
+  const ok = () => toast('Copied to clipboard');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(() => fallbackCopy(text, ok));
+  } else fallbackCopy(text, ok);
+}
+function fallbackCopy(text, ok) {
+  const ta = document.createElement('textarea'); ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); ok(); } catch { toast('Copy failed'); }
+  document.body.removeChild(ta);
+}
+
+let tT;
+function toast(m){ $('toastMsg').textContent=m; $('toast').classList.add('show'); clearTimeout(tT); tT=setTimeout(()=>$('toast').classList.remove('show'),2400); }
+
+init();
+</script>
+</body>
+</html>
