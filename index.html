@@ -577,6 +577,59 @@
   .lang-seg button { flex: 1; padding: 0.7rem; border-radius: 12px; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink-2); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all .16s; }
   .lang-seg button.on { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 
+  /* sync chip */
+  .syncchip { display: none; align-items: center; gap: 0.35rem; height: 42px; padding: 0 0.8rem; border-radius: 100px; border: 1px solid var(--border); background: var(--surface); color: var(--ink-3); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.03em; box-shadow: var(--shadow-sm); white-space: nowrap; }
+  .syncchip.show { display: inline-flex; }
+  .syncchip svg { width: 14px; height: 14px; }
+  .syncchip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage, #97a98b); }
+  .syncchip.saving .dot { background: var(--gold); }
+  .syncchip.err .dot { background: #C0795F; }
+
+  .teacher-link { width: 100%; text-align: center; margin-top: 0.5rem; background: none; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.72rem; color: var(--ink-4); text-decoration: underline; text-underline-offset: 3px; -webkit-tap-highlight-color: transparent; }
+  .teacher-link:hover { color: var(--ink-2); }
+
+  /* teacher admin */
+  .admin-overlay { align-items: stretch; justify-content: center; padding: 0; }
+  .admin-panel { width: 100%; max-width: 760px; background: var(--bg); display: flex; flex-direction: column; max-height: 100vh; overflow-y: auto; box-shadow: 0 0 80px rgba(34,28,18,.4); }
+  .admin-head { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 1.5rem 1.2rem; position: sticky; top: 0; background: var(--bg); z-index: 2; border-bottom: 1px solid var(--border); }
+  .admin-head h2 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--ink); }
+  .admin-head .eyebrow { color: var(--gold); }
+  .admin-head-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .admin-login { padding: 2.5rem 1.6rem; text-align: center; max-width: 380px; margin: 0 auto; }
+  .admin-login .bism { font-family: 'Amiri', serif; font-size: 1.7rem; color: var(--gold); margin-bottom: 1rem; }
+  .admin-login p { color: var(--ink-3); font-size: 0.92rem; margin-bottom: 1.2rem; }
+  .admin-login input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 1.05rem; text-align: center; letter-spacing: 0.1em; color: var(--ink); background: var(--surface); border: 1.5px solid var(--border-2); border-radius: 14px; padding: 0.85rem 1rem; outline: none; }
+  .admin-login input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+  .admin-msg { min-height: 1.2rem; font-size: 0.8rem; color: #B0573C; margin: 0.7rem 0 0; }
+  .admin-body, .admin-detail { padding: 1.4rem 1.5rem 3rem; }
+  .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.7rem; margin-bottom: 1.3rem; }
+  .admin-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 0.9rem 0.8rem; text-align: center; box-shadow: var(--shadow-sm); }
+  .admin-stat .v { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.5rem; color: var(--ink); }
+  .admin-stat .l { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-top: 0.3rem; }
+  .admin-search { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 0.8rem 1rem; outline: none; margin-bottom: 1rem; }
+  .admin-search:focus { border-color: var(--accent); }
+  .admin-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .stu { display: flex; align-items: center; gap: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.2rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: all .16s; }
+  .stu:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .stu .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gold-soft); color: #6E4F1C; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; flex-shrink: 0; }
+  .stu .who { flex: 1; min-width: 0; }
+  .stu .nm { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--ink); }
+  .stu .sub { font-size: 0.72rem; color: var(--ink-4); margin-top: 2px; }
+  .stu .nums { display: flex; gap: 1rem; flex-shrink: 0; text-align: center; }
+  .stu .nums .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+  .stu .nums .nl { font-size: 0.54rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); }
+  .stu .chev { color: var(--ink-4); flex-shrink: 0; }
+  .admin-back { background: none; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--ink-3); margin-bottom: 1rem; -webkit-tap-highlight-color: transparent; }
+  .admin-back:hover { color: var(--ink); }
+  .adm-detail-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--ink); }
+  .adm-detail-meta { font-size: 0.8rem; color: var(--ink-3); margin: 0.3rem 0 1.2rem; }
+  .admin-detail .log-scroll { max-height: none; }
+  @media (max-width: 560px) {
+    .admin-stats { grid-template-columns: repeat(2, 1fr); }
+    .stu .nums { gap: 0.7rem; }
+    .admin-head, .admin-body, .admin-detail { padding-left: 1rem; padding-right: 1rem; }
+  }
+
   /* ---------- Arabic / RTL ---------- */
   body.rtl { font-family: 'Tajawal', 'DM Sans', sans-serif; }
   body.rtl h1, body.rtl .tile-label, body.rtl .save, body.rtl .qa, body.rtl .wk-range,
@@ -602,6 +655,8 @@
   [dir="rtl"] .switch input:checked + .track + .thumb { transform: translateX(-19px); }
   [dir="rtl"] .lt::before, [dir="rtl"] .tot::before { content: ''; }
   [dir="rtl"] .narr::before { content: ''; }
+  [dir="rtl"] .stu .chev svg { transform: scaleX(-1); }
+  [dir="rtl"] .admin-back { direction: rtl; }
 
   @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -663,6 +718,7 @@
       <h1 data-i18n="appTitle">Quran Tracker</h1>
     </div>
     <div class="topbar-right">
+      <div class="syncchip" id="syncChip"><span class="dot"></span><span id="syncText">Synced</span></div>
       <div class="today-chip" id="todayChip">—</div>
       <button class="langtoggle" id="langToggle" aria-label="Switch language" title="English / العربية">ع</button>
       <button class="gear" id="settingsOpen" aria-label="Customise dashboard" title="Customise">
@@ -833,6 +889,46 @@
     <button class="fbtn" id="copyBtn"><svg viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M4 16V5a1 1 0 011-1h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> <span data-i18n="copyText">Copy as text</span></button>
     <input type="file" id="importFile" accept="application/json,.json" hidden>
     <span class="fnote" data-i18n="footerNote">Saved on this device only — export a backup to keep it safe or move to another device.</span>
+    <button class="teacher-link" id="teacherLink" data-i18n="teacherView">Teacher view</button>
+  </div>
+</div>
+
+<!-- teacher admin view -->
+<div class="overlay admin-overlay" id="admin" hidden>
+  <div class="admin-panel">
+    <div class="admin-head">
+      <div>
+        <div class="eyebrow" data-i18n="teacherView">Teacher view</div>
+        <h2 id="admTitle" data-i18n="students">Students</h2>
+      </div>
+      <div class="admin-head-actions">
+        <button class="gear" id="admRefresh" title="Refresh" hidden><svg viewBox="0 0 24 24" fill="none"><path d="M20 11A8 8 0 105.6 6.5M20 4v4h-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="sheet-close" id="admClose" aria-label="Close">&times;</button>
+      </div>
+    </div>
+
+    <!-- login -->
+    <div class="admin-login" id="admLogin">
+      <div class="bism">﷽</div>
+      <p id="admLoginSub" data-i18n="teacherPassPrompt">Enter the teacher passcode to view all students.</p>
+      <input type="password" id="admPass" data-i18n-ph="passcode" placeholder="Passcode">
+      <div class="admin-msg" id="admMsg"></div>
+      <button class="name-go" id="admGo" data-i18n="enter">Enter</button>
+    </div>
+
+    <!-- dashboard -->
+    <div class="admin-body" id="admBody" hidden>
+      <div class="admin-stats" id="admStats"></div>
+      <input type="text" class="admin-search" id="admSearch" data-i18n-ph="searchStudents" placeholder="Search students…">
+      <div class="admin-list" id="admList"></div>
+    </div>
+
+    <!-- single student detail -->
+    <div class="admin-detail" id="admDetail" hidden>
+      <button class="admin-back" id="admBack">‹ <span data-i18n="backToStudents">All students</span></button>
+      <div id="admDetailHead"></div>
+      <div class="log-scroll" id="admDetailLog"></div>
+    </div>
   </div>
 </div>
 
@@ -904,7 +1000,15 @@
   <span id="toastMsg">Saved</span>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ===== Cloud sync config — fill these in after the Supabase setup (see TEACHER-SETUP.md) ===== */
+const CLOUD = {
+  url:     '',   // e.g. 'https://abcd1234.supabase.co'
+  anonKey: '',   // your Supabase anon public key
+};
+/* ============================================================================================= */
+
 const KEY = 'quran-tracker-log';
 const WKEY = 'quran-tracker-weekly';
 let videos = 0;
@@ -925,7 +1029,7 @@ function defaultWeeklyTasks() { return [
 function mondayOf(date) { const d = new Date(date); d.setHours(0,0,0,0); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d; }
 let weekStart = mondayOf(new Date());
 const wLoad  = () => { try { return JSON.parse(localStorage.getItem(WKEY)) || {}; } catch { return {}; } };
-const wStore = d => localStorage.setItem(WKEY, JSON.stringify(d));
+const wStore = d => { localStorage.setItem(WKEY, JSON.stringify(d)); scheduleSync(); };
 
 /* preferences: which boxes are shown, custom quick actions, saved history view */
 const PKEY = 'quran-tracker-prefs';
@@ -955,10 +1059,36 @@ function loadPrefs() {
   if (!p.historyView) p.historyView = 'list';
   if (p.lang !== 'ar' && p.lang !== 'en') p.lang = 'en';
   if (typeof p.name !== 'string') p.name = '';
+  if (!p.studentId) p.studentId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2);
   return p;
 }
 let prefs = loadPrefs();
-function savePrefs() { localStorage.setItem(PKEY, JSON.stringify(prefs)); }
+function savePrefs() { localStorage.setItem(PKEY, JSON.stringify(prefs)); scheduleSync(); }
+
+/* ---------- cloud sync (Supabase) ---------- */
+let sb = null;
+if (CLOUD.url && CLOUD.anonKey && window.supabase) {
+  try { sb = window.supabase.createClient(CLOUD.url, CLOUD.anonKey); } catch (e) { sb = null; }
+}
+let syncT;
+function setSync(state) {
+  const chip = $('syncChip'); if (!chip || !sb) return;
+  chip.classList.add('show'); chip.classList.remove('saving','err');
+  if (state === 'saving') chip.classList.add('saving');
+  if (state === 'err') chip.classList.add('err');
+  $('syncText').textContent = state === 'saving' ? t('syncSaving') : (state === 'err' ? t('syncOffline') : t('syncSynced'));
+}
+function scheduleSync() { if (!sb || !prefs.name) return; setSync('saving'); clearTimeout(syncT); syncT = setTimeout(pushSync, 1200); }
+async function pushSync() {
+  if (!sb || !prefs.name) return;
+  try {
+    const { error } = await sb.from('students').upsert({
+      student_id: prefs.studentId, name: prefs.name, lang: prefs.lang,
+      log: load(), weekly: wLoad(), updated_at: new Date().toISOString()
+    }, { onConflict: 'student_id', returning: 'minimal' });
+    setSync(error ? 'err' : 'ok');
+  } catch (e) { setSync('err'); }
+}
 
 /* ---------- i18n ---------- */
 const STR = {
@@ -1068,6 +1198,29 @@ const STR = {
   qtag_video:{en:'video',ar:'فيديو'},
   qtag_class:{en:'class',ar:'حلقة'},
   qtag_rest:{en:'rest',ar:'راحة'},
+  teacherView:{en:'Teacher view',ar:'لوحة المعلّمة'},
+  teacherPassPrompt:{en:'Enter the teacher passcode to view all students.',ar:'أدخلي رمز المعلّمة لعرض جميع الطالبات.'},
+  passcode:{en:'Passcode',ar:'رمز الدخول'},
+  enter:{en:'Enter',ar:'دخول'},
+  searchStudents:{en:'Search students…',ar:'ابحثي عن طالبة…'},
+  backToStudents:{en:'All students',ar:'كل الطالبات'},
+  students:{en:'Students',ar:'الطالبات'},
+  st_students:{en:'Students',ar:'الطالبات'},
+  st_videos:{en:'Videos',ar:'فيديو'},
+  st_wird:{en:'Wird',ar:'ورد'},
+  st_active:{en:'Active today',ar:'نشطات اليوم'},
+  lastActive:{en:'last active',ar:'آخر نشاط'},
+  vids:{en:'vids',ar:'فيديو'},
+  days:{en:'days',ar:'أيام'},
+  wirdShort:{en:'wird',ar:'ورد'},
+  cloudOff:{en:'Cloud sync is not set up yet.',ar:'لم يتم إعداد المزامنة السحابية بعد.'},
+  wrongPass:{en:'Wrong passcode or no connection.',ar:'رمز خاطئ أو لا يوجد اتصال.'},
+  noStudents:{en:'No students have logged anything yet.',ar:'لا توجد طالبات سجّلن أي شيء بعد.'},
+  loading:{en:'Loading…',ar:'جارٍ التحميل…'},
+  syncSynced:{en:'Synced',ar:'متزامن'},
+  syncSaving:{en:'Saving…',ar:'جارٍ الحفظ…'},
+  syncOffline:{en:'Offline',ar:'غير متصل'},
+  never:{en:'never',ar:'أبدًا'},
 };
 function t(k){ const e = STR[k]; return e ? (e[prefs.lang] || e.en) : k; }
 function loc(){ return prefs.lang === 'ar' ? 'ar' : 'en-GB'; }
@@ -1093,7 +1246,7 @@ const HADITHS = [
 let hadithIdx = 0;
 
 const load  = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
-const store = d => localStorage.setItem(KEY, JSON.stringify(d));
+const store = d => { localStorage.setItem(KEY, JSON.stringify(d)); scheduleSync(); };
 
 function todayStr() { const d=new Date(); const o=d.getTimezoneOffset(); return new Date(d-o*60000).toISOString().slice(0,10); }
 function iso(d){ const o=d.getTimezoneOffset(); return new Date(d-o*60000).toISOString().slice(0,10); }
@@ -1170,8 +1323,20 @@ function init() {
     prefs.lang = b.dataset.lang; savePrefs(); applyLang(); npApplyLang(); $('npName').focus();
   });
 
+  // teacher admin
+  $('teacherLink').onclick = openAdmin;
+  $('admClose').onclick = closeAdmin;
+  $('admGo').onclick = adminLogin;
+  $('admPass').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
+  $('admBack').onclick = () => { $('admDetail').hidden = true; $('admBody').hidden = false; };
+  $('admRefresh').onclick = refreshAdmin;
+  $('admSearch').oninput = renderAdminList;
+  $('admin').addEventListener('click', e => { if (e.target.id === 'admin') closeAdmin(); });
+
   applyLang();   // translates + applies prefs + renders everything
   if (!prefs.name) { npApplyLang(); $('namePrompt').hidden = false; setTimeout(() => $('npName').focus(), 60); }
+  if (sb && prefs.name) scheduleSync();           // push latest on load
+  if (location.hash === '#teacher') openAdmin();
 }
 
 /* ---------- language ---------- */
@@ -1699,6 +1864,106 @@ function fallbackCopy(text, ok) {
   ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
   try { document.execCommand('copy'); ok(); } catch { toast(t('t_copyFail')); }
   document.body.removeChild(ta);
+}
+
+/* ---------- teacher admin view ---------- */
+let ADMIN = [];
+let admPassCache = '';
+function openAdmin() {
+  $('admin').hidden = false;
+  $('admBody').hidden = true; $('admDetail').hidden = true; $('admRefresh').hidden = true;
+  $('admLogin').hidden = false; $('admMsg').textContent = sb ? '' : t('cloudOff');
+  setTimeout(() => $('admPass').focus(), 60);
+}
+function closeAdmin() {
+  $('admin').hidden = true;
+  if (location.hash === '#teacher') history.replaceState(null, '', location.pathname);
+}
+async function adminLogin() {
+  if (!sb) { $('admMsg').textContent = t('cloudOff'); return; }
+  const pass = $('admPass').value.trim();
+  $('admMsg').textContent = t('loading');
+  try {
+    const { data, error } = await sb.rpc('get_all_students', { pass });
+    if (error) { $('admMsg').textContent = t('wrongPass'); return; }
+    if (!data || !data.length) {
+      // could be wrong passcode (returns empty) or genuinely no students
+      ADMIN = []; admPassCache = pass; $('admMsg').textContent = t('wrongPass'); return;
+    }
+    ADMIN = data; admPassCache = pass; $('admMsg').textContent = '';
+    showAdminBody();
+  } catch (e) { $('admMsg').textContent = t('wrongPass'); }
+}
+async function refreshAdmin() {
+  if (!sb || !admPassCache) return;
+  try {
+    const { data, error } = await sb.rpc('get_all_students', { pass: admPassCache });
+    if (!error && data) { ADMIN = data; renderAdminStats(); renderAdminList(); toast(t('syncSynced')); }
+  } catch (e) {}
+}
+function showAdminBody() {
+  $('admLogin').hidden = true; $('admDetail').hidden = true; $('admBody').hidden = false; $('admRefresh').hidden = false;
+  renderAdminStats(); renderAdminList();
+}
+function sSum(s, k) { return (s.log || []).reduce((a, e) => a + (e[k] || 0), 0); }
+function renderAdminStats() {
+  const totVid = ADMIN.reduce((a, s) => a + sSum(s, 'videos'), 0);
+  const totWird = ADMIN.reduce((a, s) => a + sSum(s, 'wird'), 0);
+  const active = ADMIN.filter(s => (s.log || []).some(e => e.date === todayStr())).length;
+  const stat = (v, k) => `<div class="admin-stat"><div class="v">${v}</div><div class="l">${t(k)}</div></div>`;
+  $('admStats').innerHTML = stat(ADMIN.length, 'st_students') + stat(totVid, 'st_videos') + stat(totWird, 'st_wird') + stat(active, 'st_active');
+}
+function renderAdminList() {
+  const q = ($('admSearch').value || '').trim().toLowerCase();
+  const rows = ADMIN.filter(s => !q || (s.name || '').toLowerCase().includes(q))
+                    .sort((a, b) => (b.updated_at || '').localeCompare(a.updated_at || ''));
+  if (!rows.length) { $('admList').innerHTML = `<div class="empty"><p>${t('noStudents')}</p></div>`; return; }
+  $('admList').innerHTML = rows.map(s => {
+    const initials = (s.name || '?').trim().charAt(0).toUpperCase();
+    const days = (s.log || []).length, vids = sSum(s, 'videos'), wird = sSum(s, 'wird');
+    const la = s.updated_at ? new Date(s.updated_at).toLocaleDateString(loc(), { day:'numeric', month:'short' }) : t('never');
+    return `<div class="stu" data-id="${esc(s.student_id)}">
+      <div class="avatar">${esc(initials)}</div>
+      <div class="who"><div class="nm">${esc(s.name || '—')}</div><div class="sub">${t('lastActive')}: ${la}</div></div>
+      <div class="nums">
+        <div><div class="n">${vids}</div><div class="nl">${t('vids')}</div></div>
+        <div><div class="n">${wird}</div><div class="nl">${t('wirdShort')}</div></div>
+        <div><div class="n">${days}</div><div class="nl">${t('days')}</div></div>
+      </div>
+      <div class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>`;
+  }).join('');
+  $('admList').querySelectorAll('.stu').forEach(el => el.onclick = () => openStudent(el.dataset.id));
+}
+function openStudent(id) {
+  const s = ADMIN.find(x => x.student_id === id); if (!s) return;
+  $('admBody').hidden = true; $('admDetail').hidden = false;
+  const vids = sSum(s, 'videos'), wird = sSum(s, 'wird'), days = (s.log || []).length, stk = streak(s.log || []);
+  $('admDetailHead').innerHTML = `<div class="adm-detail-name">${esc(s.name || '—')}</div>
+    <div class="adm-detail-meta">${vids} ${t('vids')} · ${wird} ${t('wirdShort')} · ${days} ${t('days')} · ${stk} 🔥</div>`;
+  $('admDetailLog').innerHTML = adminLogHtml(s.log || []);
+}
+function adminLogHtml(log) {
+  if (!log.length) return `<div class="empty"><p>${t('noDays')}</p></div>`;
+  const asc = [...log].sort((a, b) => a.date.localeCompare(b.date));
+  const rt = {}; let run = 0; asc.forEach(e => { run += (e.videos || 0); rt[e.date] = run; });
+  const data = [...log].sort((a, b) => b.date.localeCompare(a.date));
+  let html = '<div class="llist">', lastMonth = null;
+  for (const e of data) {
+    const d = new Date(e.date + 'T00:00:00');
+    const mk = d.toLocaleDateString(loc(), { month:'long', year:'numeric' });
+    if (mk !== lastMonth) { html += `<div class="month-label">${mk}</div>`; lastMonth = mk; }
+    const isRest = isRestText(e.text);
+    const vid = e.videos ? `<span class="lvid">${vidIcon()} +${e.videos} <span class="lt">· ${rt[e.date]}</span></span>` : '';
+    const wd  = e.wird ? `<span class="lwird">${hpIcon()} ${e.wird}×</span>` : '';
+    const pills = (vid || wd) ? `<div class="lpills">${wd}${vid}</div>` : `<span class="lvid none">—</span>`;
+    html += `<div class="lrow ${isRest?'rest':''}">
+      <div class="lday"><span class="ln">${d.getDate()}</span><span class="lmo">${d.toLocaleDateString(loc(),{month:'short'})}</span></div>
+      <div class="lmain"><div class="ldow">${d.toLocaleDateString(loc(),{weekday:'long'})}</div><div class="ltext">${esc(e.text||'')}</div></div>
+      ${pills}
+    </div>`;
+  }
+  return html + '</div>';
 }
 
 let tT;
