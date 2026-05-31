@@ -521,7 +521,10 @@
   }
   .qa-item .qi-name { flex: 1; font-size: 0.88rem; font-weight: 600; color: var(--ink-2); display: flex; align-items: center; gap: 0.4rem; }
   .qa-item .qi-name .ar { font-family: 'Amiri', serif; }
-  .qa-item .qi-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-4); background: var(--surface); border: 1px solid var(--border-2); border-radius: 100px; padding: 0.15rem 0.5rem; }
+  .qa-item .qi-edit { flex: 1; min-width: 0; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--border-2); border-radius: 9px; padding: 0.4rem 0.6rem; outline: none; }
+  .qa-item .qi-edit:focus { border-color: var(--accent); }
+  body.rtl .qa-item .qi-edit { font-family: 'Tajawal', sans-serif; }
+  .qa-item .qi-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-4); background: var(--surface); border: 1px solid var(--border-2); border-radius: 100px; padding: 0.15rem 0.5rem; white-space: nowrap; flex-shrink: 0; }
   .qa-item .qi-del { width: 26px; height: 26px; border-radius: 50%; border: none; background: var(--surface); color: var(--ink-3); cursor: pointer; font-size: 0.9rem; flex-shrink: 0; transition: all .15s; }
   .qa-item .qi-del:hover { background: #E9C9C0; color: #A1452E; }
   .qa-add { background: var(--surface-2); border: 1px dashed var(--border); border-radius: 15px; padding: 0.9rem; }
@@ -1060,6 +1063,11 @@ const STR = {
   enterName:{en:'Please write your full name to begin',ar:'اكتبي اسمك الكامل للبدء'},
   namePh:{en:'Your full name',ar:'اسمك الكامل'},
   continue:{en:'Continue',ar:'متابعة'},
+  tag_note:{en:'note',ar:'ملاحظة'},
+  qtag_wird:{en:'wird',ar:'ورد'},
+  qtag_video:{en:'video',ar:'فيديو'},
+  qtag_class:{en:'class',ar:'حلقة'},
+  qtag_rest:{en:'rest',ar:'راحة'},
 };
 function t(k){ const e = STR[k]; return e ? (e[prefs.lang] || e.en) : k; }
 function loc(){ return prefs.lang === 'ar' ? 'ar' : 'en-GB'; }
@@ -1383,12 +1391,15 @@ function renderQaList() {
   const list = $('qaList');
   if (!prefs.quickActions.length) { list.innerHTML = `<div class="set-hint" style="margin:0">No buttons yet — add one below.</div>`; return; }
   const tagFor = a => a.kind === 'custom'
-    ? ['note', a.video && '+video', a.wird && '+ورد'].filter(Boolean).join(' ')
-    : a.kind;
+    ? [t('tag_note'), a.video && '+'+t('videos'), a.wird && '+ورد'].filter(Boolean).join(' ')
+    : t('qtag_' + a.kind);
   list.innerHTML = prefs.quickActions.map(a => {
     const d = qaDisplay(a);
+    const nameCell = a.kind === 'custom'
+      ? `<input class="qi-edit" data-edit="${a.id}" value="${esc(a.label)}" maxlength="22">`
+      : `<span class="qi-name">${esc(d.label)}${d.ar?` <span class="ar">${esc(d.ar)}</span>`:''}</span>`;
     return `<div class="qa-item">
-      <span class="qi-name">${esc(d.label)}${d.ar?` <span class="ar">${esc(d.ar)}</span>`:''}</span>
+      ${nameCell}
       <span class="qi-tag">${esc(tagFor(a) || 'custom')}</span>
       <button class="qi-del" data-id="${a.id}" title="Remove">&times;</button>
     </div>`;
@@ -1396,6 +1407,10 @@ function renderQaList() {
   list.querySelectorAll('.qi-del').forEach(btn => btn.onclick = () => {
     prefs.quickActions = prefs.quickActions.filter(x => x.id !== btn.dataset.id);
     savePrefs(); renderQaList(); renderQuickActions();
+  });
+  list.querySelectorAll('.qi-edit').forEach(inp => inp.oninput = () => {
+    const a = prefs.quickActions.find(x => x.id === inp.dataset.edit);
+    if (a) { a.label = inp.value; a.text = inp.value; savePrefs(); renderQuickActions(); }
   });
 }
 function addQuickAction() {
