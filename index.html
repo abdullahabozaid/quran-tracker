@@ -1000,7 +1000,6 @@
   <span id="toastMsg">Saved</span>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===== Cloud sync config — fill these in after the Supabase setup (see TEACHER-SETUP.md) ===== */
 const CLOUD = {
@@ -1065,28 +1064,38 @@ function loadPrefs() {
 let prefs = loadPrefs();
 function savePrefs() { localStorage.setItem(PKEY, JSON.stringify(prefs)); scheduleSync(); }
 
-/* ---------- cloud sync (Supabase) ---------- */
-let sb = null;
-if (CLOUD.url && CLOUD.anonKey && window.supabase) {
-  try { sb = window.supabase.createClient(CLOUD.url, CLOUD.anonKey); } catch (e) { sb = null; }
+/* ---------- cloud sync (Supabase REST, no external library) ---------- */
+const cloudOn = !!(CLOUD.url && CLOUD.anonKey);
+function cloudFetch(path, opts) {
+  opts = opts || {};
+  return fetch(CLOUD.url + path, Object.assign({}, opts, {
+    headers: Object.assign({
+      'apikey': CLOUD.anonKey,
+      'Authorization': 'Bearer ' + CLOUD.anonKey,
+      'Content-Type': 'application/json'
+    }, opts.headers || {})
+  }));
 }
 let syncT;
 function setSync(state) {
-  const chip = $('syncChip'); if (!chip || !sb) return;
+  const chip = $('syncChip'); if (!chip || !cloudOn) return;
   chip.classList.add('show'); chip.classList.remove('saving','err');
   if (state === 'saving') chip.classList.add('saving');
   if (state === 'err') chip.classList.add('err');
   $('syncText').textContent = state === 'saving' ? t('syncSaving') : (state === 'err' ? t('syncOffline') : t('syncSynced'));
 }
-function scheduleSync() { if (!sb || !prefs.name) return; setSync('saving'); clearTimeout(syncT); syncT = setTimeout(pushSync, 1200); }
+function scheduleSync() { if (!cloudOn || !prefs.name) return; setSync('saving'); clearTimeout(syncT); syncT = setTimeout(pushSync, 1200); }
 async function pushSync() {
-  if (!sb || !prefs.name) return;
+  if (!cloudOn || !prefs.name) return;
   try {
-    const { error } = await sb.from('students').upsert({
-      student_id: prefs.studentId, name: prefs.name, lang: prefs.lang,
-      log: load(), weekly: wLoad(), updated_at: new Date().toISOString()
-    }, { onConflict: 'student_id', returning: 'minimal' });
-    setSync(error ? 'err' : 'ok');
+    const res = await cloudFetch('/rest/v1/rpc/save_student', {
+      method: 'POST',
+      body: JSON.stringify({
+        p_id: prefs.studentId, p_name: prefs.name, p_lang: prefs.lang,
+        p_log: load(), p_weekly: wLoad()
+      })
+    });
+    setSync(res.ok ? 'ok' : 'err');
   } catch (e) { setSync('err'); }
 }
 
@@ -1335,7 +1344,7 @@ function init() {
 
   applyLang();   // translates + applies prefs + renders everything
   if (!prefs.name) { npApplyLang(); $('namePrompt').hidden = false; setTimeout(() => $('npName').focus(), 60); }
-  if (sb && prefs.name) scheduleSync();           // push latest on load
+  if (cloudOn && prefs.name) scheduleSync();       // push latest on load
   if (location.hash === '#teacher') openAdmin();
 }
 
@@ -1872,33 +1881,34 @@ let admPassCache = '';
 function openAdmin() {
   $('admin').hidden = false;
   $('admBody').hidden = true; $('admDetail').hidden = true; $('admRefresh').hidden = true;
-  $('admLogin').hidden = false; $('admMsg').textContent = sb ? '' : t('cloudOff');
+  $('admLogin').hidden = false; $('admMsg').textContent = cloudOn ? '' : t('cloudOff');
   setTimeout(() => $('admPass').focus(), 60);
 }
 function closeAdmin() {
   $('admin').hidden = true;
   if (location.hash === '#teacher') history.replaceState(null, '', location.pathname);
 }
+async function fetchStudents(pass) {
+  const res = await cloudFetch('/rest/v1/rpc/get_all_students', { method: 'POST', body: JSON.stringify({ pass }) });
+  if (!res.ok) throw new Error('rpc');
+  return await res.json();
+}
 async function adminLogin() {
-  if (!sb) { $('admMsg').textContent = t('cloudOff'); return; }
+  if (!cloudOn) { $('admMsg').textContent = t('cloudOff'); return; }
   const pass = $('admPass').value.trim();
   $('admMsg').textContent = t('loading');
   try {
-    const { data, error } = await sb.rpc('get_all_students', { pass });
-    if (error) { $('admMsg').textContent = t('wrongPass'); return; }
-    if (!data || !data.length) {
-      // could be wrong passcode (returns empty) or genuinely no students
-      ADMIN = []; admPassCache = pass; $('admMsg').textContent = t('wrongPass'); return;
-    }
+    const data = await fetchStudents(pass);
+    if (!data || !data.length) { ADMIN = []; admPassCache = pass; $('admMsg').textContent = t('wrongPass'); return; }
     ADMIN = data; admPassCache = pass; $('admMsg').textContent = '';
     showAdminBody();
   } catch (e) { $('admMsg').textContent = t('wrongPass'); }
 }
 async function refreshAdmin() {
-  if (!sb || !admPassCache) return;
+  if (!cloudOn || !admPassCache) return;
   try {
-    const { data, error } = await sb.rpc('get_all_students', { pass: admPassCache });
-    if (!error && data) { ADMIN = data; renderAdminStats(); renderAdminList(); toast(t('syncSynced')); }
+    const data = await fetchStudents(admPassCache);
+    if (data) { ADMIN = data; renderAdminStats(); renderAdminList(); toast(t('syncSynced')); }
   } catch (e) {}
 }
 function showAdminBody() {
