@@ -901,6 +901,17 @@
   <span id="toastMsg">Saved</span>
 </div>
 
+<script>(function(){
+ function ds(day){var d=new Date();d.setDate(day);var o=d.getTimezoneOffset();return new Date(d-o*60000).toISOString().slice(0,10);}
+ function mon(){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));var o=d.getTimezoneOffset();return new Date(d-o*60000).toISOString().slice(0,10);}
+ localStorage.setItem('quran-tracker-log', JSON.stringify([
+  {date:ds(15), text:'Video watched', videos:2, wird:1},
+  {date:ds(16), text:'Rest day', videos:0, wird:0},
+  {date:ds(17), text:'Class summary', videos:1, wird:3}]));
+ var w={}; w[mon()]={tasmee:true, recap:true};
+ localStorage.setItem('quran-tracker-weekly', JSON.stringify(w));
+ localStorage.setItem('quran-tracker-prefs', JSON.stringify({tiles:{},historyView:'list',lang:'ar',name:'Eman Mohamed'}));
+})();</script>
 <script>
 const KEY = 'quran-tracker-log';
 const WKEY = 'quran-tracker-weekly';
