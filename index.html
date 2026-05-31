@@ -588,6 +588,27 @@
   .teacher-link { width: 100%; text-align: center; margin-top: 0.5rem; background: none; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.72rem; color: var(--ink-4); text-decoration: underline; text-underline-offset: 3px; -webkit-tap-highlight-color: transparent; }
   .teacher-link:hover { color: var(--ink-2); }
 
+  /* full-width tile helper */
+  .span4 { grid-column: span 4; }
+
+  /* student "from your teacher" tile */
+  .teacher-tile .tt-body { display: flex; flex-direction: column; gap: 0.7rem; }
+  .tt-empty { font-size: 0.88rem; color: var(--ink-4); font-style: italic; padding: 0.3rem 0; }
+  .tt-note { background: var(--gold-soft); border: 1px solid #E6D2A8; border-radius: 14px; padding: 0.9rem 1.05rem; color: #5C4A2E; font-size: 0.95rem; line-height: 1.55; position: relative; }
+  .tt-note::before { content: '“'; font-family: 'Amiri', serif; color: var(--gold); font-size: 1.6rem; line-height: 0; position: absolute; top: 0.9rem; inset-inline-start: 0.45rem; opacity: .5; }
+  .tt-note { padding-inline-start: 1.5rem; }
+  .tt-hwlist { display: flex; flex-direction: column; gap: 0.5rem; }
+  .tt-hw { display: flex; align-items: center; gap: 0.75rem; text-align: start; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 14px; padding: 0.75rem 0.95rem; cursor: pointer; transition: all .16s; -webkit-tap-highlight-color: transparent; }
+  .tt-hw:hover { border-color: var(--accent); }
+  .tt-box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--ink-4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .18s; }
+  .tt-box svg { width: 12px; height: 12px; opacity: 0; transition: opacity .15s; }
+  .tt-txt { font-size: 0.92rem; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .tt-due { display: block; font-size: 0.7rem; font-weight: 600; color: var(--ink-4); margin-top: 2px; }
+  .tt-hw.done { background: var(--sage-tint, #EDF1E7); border-color: #C7D6C0; }
+  .tt-hw.done .tt-box { background: #5FA06A; border-color: #5FA06A; }
+  .tt-hw.done .tt-box svg { opacity: 1; }
+  .tt-hw.done .tt-txt { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-4); }
+
   /* teacher admin — full page */
   .admin-overlay { position: fixed; inset: 0; z-index: 200; background: var(--bg); overflow-y: auto; }
   .admin-overlay[hidden] { display: none; }
@@ -656,6 +677,29 @@
   .adm-chip .cn { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.05rem; color: var(--ink); }
   .adm-chip .cl { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); }
   .admin-detail .log-scroll { max-height: none; }
+  .adm-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm); }
+  .adm-sec-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.45rem; }
+  .adm-sec-title svg { width: 15px; height: 15px; color: var(--gold); }
+  .adm-note { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; color: var(--ink); background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 12px; padding: 0.8rem 0.9rem; outline: none; resize: vertical; min-height: 72px; line-height: 1.5; }
+  .adm-note:focus { border-color: var(--accent); }
+  .adm-hwlist { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .adm-hw { display: flex; align-items: center; gap: 0.7rem; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 12px; padding: 0.6rem 0.5rem 0.6rem 0.85rem; }
+  .adm-hw .hw-main { flex: 1; min-width: 0; }
+  .adm-hw .hw-text { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+  .adm-hw .hw-due { font-size: 0.68rem; color: var(--ink-4); margin-top: 1px; }
+  .hw-badge { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 100px; padding: 0.22rem 0.55rem; white-space: nowrap; flex-shrink: 0; }
+  .hw-badge.done { background: #DCEBDD; color: #3E6B45; } .hw-badge.pending { background: var(--surface); border: 1px solid var(--border-2); color: var(--ink-4); }
+  .hw-del { width: 26px; height: 26px; border-radius: 50%; border: none; background: var(--surface); color: var(--ink-3); cursor: pointer; font-size: 0.9rem; flex-shrink: 0; transition: all .15s; }
+  .hw-del:hover { background: #E9C9C0; color: #A1452E; }
+  .adm-hw-add { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .adm-hw-add input[type=text] { flex: 1; min-width: 150px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--ink); background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 11px; padding: 0.6rem 0.8rem; outline: none; }
+  .adm-hw-add input[type=date] { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 11px; padding: 0.55rem 0.7rem; outline: none; }
+  .adm-hw-add input:focus { border-color: var(--accent); }
+  .hw-add-btn { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.74rem; color: var(--surface); background: var(--accent); border: none; border-radius: 11px; padding: 0 1.1rem; cursor: pointer; }
+  .adm-save { width: 100%; margin-top: 0.4rem; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.06em; color: #FBF7EF; background: linear-gradient(135deg, #2A241B, #15110C); border: none; border-radius: 14px; padding: 0.9rem; cursor: pointer; transition: filter .16s; }
+  .adm-save:hover { filter: brightness(1.14); }
+  .adm-saved { text-align: center; font-size: 0.75rem; font-weight: 600; color: #3E6B45; margin-top: 0.5rem; min-height: 1rem; }
+  body.rtl .tt-txt, body.rtl .tt-note, body.rtl .tt-due, body.rtl .adm-note, body.rtl .adm-sec-title, body.rtl .hw-text, body.rtl .hw-due, body.rtl .adm-save, body.rtl .hw-add-btn, body.rtl .hw-badge, body.rtl .tt-empty { font-family: 'Tajawal', sans-serif; }
   @media (max-width: 560px) {
     .admin-head, .admin-body, .admin-detail { padding-left: 1rem; padding-right: 1rem; }
     .stu { gap: 0.7rem; padding: 0.8rem 0.85rem; }
@@ -699,14 +743,14 @@
   @media (max-width: 900px) {
     .bento { grid-template-columns: repeat(2, 1fr); }
     .span2 { grid-column: span 2; }
-    .history, .weekly { grid-column: span 2; }
+    .history, .weekly, .span4 { grid-column: span 2; }
     .hstat .big { font-size: 3rem; }
     .log-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
     .page { padding: 1.6rem 0.9rem 3rem; }
     .bento { grid-template-columns: 1fr; gap: 0.8rem; }
-    .span2, .history, .weekly { grid-column: span 1; }
+    .span2, .history, .weekly, .span4 { grid-column: span 1; }
     .topbar { margin-bottom: 1.4rem; }
     .brand h1 { font-size: 1.55rem; }
     .brand .bism { font-size: 1.05rem; margin-bottom: 0.2rem; }
@@ -889,6 +933,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- from teacher: note + homework -->
+    <div class="tile span4 teacher-tile" data-tile="teacher">
+      <div class="tile-label" data-i18n="fromTeacher">From your teacher</div>
+      <div class="tt-body" id="ttBody"></div>
     </div>
 
     <!-- history -->
@@ -1084,6 +1134,7 @@ const TILE_DEFS = [
   { key:'composer', label:'Log a day' },
   { key:'hadith',   label:'Hadith of the day' },
   { key:'weekly',   label:'Weekly tasks' },
+  { key:'teacher',  label:'From your teacher' },
   { key:'history',  label:'History' },
 ];
 function defaultQuickActions() { return [
@@ -1102,6 +1153,7 @@ function loadPrefs() {
   if (p.lang !== 'ar' && p.lang !== 'en') p.lang = 'en';
   if (typeof p.name !== 'string') p.name = '';
   if (!p.studentId) p.studentId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  if (!p.hwDone || typeof p.hwDone !== 'object') p.hwDone = {};
   return p;
 }
 let prefs = loadPrefs();
@@ -1135,11 +1187,54 @@ async function pushSync() {
       method: 'POST',
       body: JSON.stringify({
         p_id: prefs.studentId, p_name: prefs.name, p_lang: prefs.lang,
-        p_log: load(), p_weekly: wLoad()
+        p_log: load(), p_weekly: wLoad(), p_hw_done: prefs.hwDone || {}
       })
     });
     setSync(res.ok ? 'ok' : 'err');
   } catch (e) { setSync('err'); }
+}
+
+/* ---------- teacher → student (notes & homework) ---------- */
+let TEACHER = { note: '', homework: [] };
+async function pullTeacher() {
+  if (!cloudOn || !prefs.studentId) return;
+  try {
+    const res = await cloudFetch('/rest/v1/rpc/get_student', { method: 'POST', body: JSON.stringify({ p_id: prefs.studentId }) });
+    if (!res.ok) return;
+    const d = await res.json();
+    if (d && d.length) { TEACHER.note = d[0].teacher_note || ''; TEACHER.homework = Array.isArray(d[0].homework) ? d[0].homework : []; }
+    else { TEACHER.note = ''; TEACHER.homework = []; }
+    renderTeacherTile();
+  } catch (e) {}
+}
+function fmtDue(d) {
+  if (!d) return '';
+  return `${t('due')} ${new Date(d + 'T00:00:00').toLocaleDateString(loc(), { day: 'numeric', month: 'short' })}`;
+}
+function renderTeacherTile() {
+  const body = $('ttBody'); if (!body) return;
+  const note = (TEACHER.note || '').trim();
+  const hw = TEACHER.homework || [];
+  if (!note && !hw.length) { body.innerHTML = `<div class="tt-empty">${t('noHomeworkYet')}</div>`; return; }
+  let html = '';
+  if (note) html += `<div class="tt-note">${esc(note)}</div>`;
+  if (hw.length) {
+    const done = prefs.hwDone || {};
+    html += '<div class="tt-hwlist">' + hw.map(h => {
+      const isDone = !!done[h.id];
+      return `<button class="tt-hw ${isDone ? 'done' : ''}" data-hw="${esc(h.id)}">
+        <span class="tt-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.2 6L4.8 8.6L9.8 3.2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="tt-txt">${esc(h.text || '')}${h.due ? `<span class="tt-due">${fmtDue(h.due)}</span>` : ''}</span>
+      </button>`;
+    }).join('') + '</div>';
+  }
+  body.innerHTML = html;
+}
+function toggleHomework(id) {
+  if (!prefs.hwDone) prefs.hwDone = {};
+  prefs.hwDone[id] = !prefs.hwDone[id];
+  savePrefs();            // triggers cloud sync of hw_done
+  renderTeacherTile();
 }
 
 /* ---------- i18n ---------- */
@@ -1255,6 +1350,20 @@ const STR = {
   teacherOnly:{en:'For the teacher only',ar:'للمعلّمة فقط'},
   activeToday:{en:'Active today',ar:'نشطة اليوم'},
   activeYesterday:{en:'Active yesterday',ar:'نشطة أمس'},
+  fromTeacher:{en:'From your teacher',ar:'من معلّمتك'},
+  tile_teacher:{en:'From your teacher',ar:'من معلّمتك'},
+  noHomeworkYet:{en:'No homework or notes yet.',ar:'لا توجد واجبات أو ملاحظات بعد.'},
+  noteToStudent:{en:'Note to this student',ar:'ملاحظة لهذه الطالبة'},
+  notePlaceholder:{en:'Write feedback or guidance for this student…',ar:'اكتبي ملاحظة أو توجيهًا لهذه الطالبة…'},
+  homework:{en:'Homework',ar:'الواجبات'},
+  newHomework:{en:'New homework task…',ar:'مهمة جديدة…'},
+  add:{en:'Add',ar:'إضافة'},
+  saveForStudent:{en:'Save for student',ar:'حفظ للطالبة'},
+  savedForStudent:{en:'Saved ✓',ar:'تم الحفظ ✓'},
+  due:{en:'Due',ar:'الموعد'},
+  done:{en:'Done',ar:'تم'},
+  pending:{en:'Pending',ar:'بانتظار'},
+  noHomeworkSet:{en:'No homework assigned yet.',ar:'لم تُسند واجبات بعد.'},
   teacherPassPrompt:{en:'Enter the teacher passcode to view all students.',ar:'أدخلي رمز المعلّمة لعرض جميع الطالبات.'},
   passcode:{en:'Passcode',ar:'رمز الدخول'},
   enter:{en:'Enter',ar:'دخول'},
@@ -1388,10 +1497,12 @@ function init() {
   $('admRefresh').onclick = refreshAdmin;
   $('admSearch').oninput = renderAdminList;
   window.addEventListener('hashchange', routeAdmin);
+  $('ttBody').addEventListener('click', e => { const b = e.target.closest('.tt-hw'); if (b) toggleHomework(b.dataset.hw); });
 
   applyLang();   // translates + applies prefs + renders everything
   if (!prefs.name) { npApplyLang(); $('namePrompt').hidden = false; setTimeout(() => $('npName').focus(), 60); }
   if (cloudOn && prefs.name) scheduleSync();       // push latest on load
+  if (cloudOn) pullTeacher();                      // fetch teacher's note + homework
   routeAdmin();                                    // open teacher page if URL is #teacher
 }
 
@@ -1412,6 +1523,7 @@ function applyLang() {
   applyPrefs();
   renderWeekly();
   renderHadith();
+  renderTeacherTile();
   renderAll();
   $('todayChip').textContent = new Date().toLocaleDateString(loc(), { weekday:'short', day:'numeric', month:'long' });
   if (!$('settings').hidden) renderSettings();
@@ -2015,13 +2127,17 @@ function renderAdminList() {
   }).join('');
   $('admList').querySelectorAll('.stu').forEach(el => el.onclick = () => openStudent(el.dataset.id));
 }
+let admHw = [];
 function openStudent(id) {
   const s = ADMIN.find(x => x.student_id === id); if (!s) return;
+  admHw = Array.isArray(s.homework) ? JSON.parse(JSON.stringify(s.homework)) : [];
   $('admBody').hidden = true; $('admDetail').hidden = false;
   const vids = sSum(s, 'videos'), wird = sSum(s, 'wird'), days = (s.log || []).length, stk = streak(s.log || []);
   const a = activity(s);
   const cal = `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M4 9h16M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
   const fire = `<svg viewBox="0 0 24 24" fill="none"><path d="M12 3c1 3-2 4-2 7a2 2 0 104 0c2 1.5 3 3.5 3 6a5 5 0 01-10 0c0-4 3-6 5-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+  const pen = `<svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"/></svg>`;
+  const book = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 11h6M9 14h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
   $('admDetailHead').innerHTML = `
     <div class="adm-hero">
       <div class="avatar" style="background:${avatarColor(s.student_id || s.name)}">${esc(initialOf(s.name))}</div>
@@ -2032,8 +2148,53 @@ function openStudent(id) {
       <div class="adm-chip">${hpIcon()}<span class="cn">${wird}</span><span class="cl">${t('wirdShort')}</span></div>
       <div class="adm-chip">${cal}<span class="cn">${days}</span><span class="cl">${t('days')}</span></div>
       <div class="adm-chip">${fire}<span class="cn">${stk}</span><span class="cl">${t('dayStreak')}</span></div>
-    </div>`;
+    </div>
+    <div class="adm-section">
+      <div class="adm-sec-title">${pen} ${t('noteToStudent')}</div>
+      <textarea class="adm-note" id="admNote" placeholder="${t('notePlaceholder')}">${esc(s.teacher_note || '')}</textarea>
+    </div>
+    <div class="adm-section">
+      <div class="adm-sec-title">${book} ${t('homework')}</div>
+      <div class="adm-hwlist" id="admHwList"></div>
+      <div class="adm-hw-add">
+        <input type="text" id="admHwText" placeholder="${t('newHomework')}" maxlength="90">
+        <input type="date" id="admHwDue" aria-label="${t('due')}">
+        <button class="hw-add-btn" id="admHwAdd">${t('add')}</button>
+      </div>
+    </div>
+    <button class="adm-save" id="admSaveTeacher">${t('saveForStudent')}</button>
+    <div class="adm-saved" id="admSaved"></div>`;
+  renderAdmHw(s);
+  $('admHwAdd').onclick = () => {
+    const txt = $('admHwText').value.trim(); if (!txt) return;
+    admHw.push({ id: 'h' + Date.now().toString(36) + Math.floor(Math.random()*1000), text: txt, due: $('admHwDue').value || '' });
+    $('admHwText').value = ''; $('admHwDue').value = ''; renderAdmHw(s); $('admHwText').focus();
+  };
+  $('admHwText').addEventListener('keydown', e => { if (e.key === 'Enter') $('admHwAdd').click(); });
+  $('admSaveTeacher').onclick = () => saveTeacherData(s);
   $('admDetailLog').innerHTML = adminLogHtml(s.log || []);
+}
+function renderAdmHw(s) {
+  const done = s.hw_done || {};
+  const box = $('admHwList'); if (!box) return;
+  if (!admHw.length) { box.innerHTML = `<div class="tt-empty" style="margin:0 0 .2rem">${t('noHomeworkSet')}</div>`; return; }
+  box.innerHTML = admHw.map(h => `
+    <div class="adm-hw">
+      <div class="hw-main"><div class="hw-text">${esc(h.text)}</div>${h.due ? `<div class="hw-due">${fmtDue(h.due)}</div>` : ''}</div>
+      <span class="hw-badge ${done[h.id] ? 'done' : 'pending'}">${done[h.id] ? t('done') : t('pending')}</span>
+      <button class="hw-del" data-hw="${esc(h.id)}" title="Remove">&times;</button>
+    </div>`).join('');
+  box.querySelectorAll('.hw-del').forEach(b => b.onclick = () => { admHw = admHw.filter(x => x.id !== b.dataset.hw); renderAdmHw(s); });
+}
+async function saveTeacherData(s) {
+  if (!cloudOn || !admPassCache) return;
+  const note = $('admNote').value;
+  $('admSaved').textContent = t('loading');
+  try {
+    const res = await cloudFetch('/rest/v1/rpc/set_teacher_data', { method: 'POST', body: JSON.stringify({ pass: admPassCache, p_id: s.student_id, p_note: note, p_homework: admHw }) });
+    if (res.ok) { s.teacher_note = note; s.homework = JSON.parse(JSON.stringify(admHw)); $('admSaved').textContent = t('savedForStudent'); }
+    else $('admSaved').textContent = t('wrongPass');
+  } catch (e) { $('admSaved').textContent = t('wrongPass'); }
 }
 function adminLogHtml(log) {
   if (!log.length) return `<div class="empty"><p>${t('noDays')}</p></div>`;
