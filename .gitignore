@@ -1,2 +1,4 @@
 _*.html
 .DS_Store
+.playwright-mcp/
+*.png
