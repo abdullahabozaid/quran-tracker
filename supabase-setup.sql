@@ -73,4 +73,24 @@ end; $$;
 revoke all on function public.set_teacher_data(text,text,text,jsonb) from public;
 grant execute on function public.set_teacher_data(text,text,text,jsonb) to anon;
 
+-- Teacher deletes one student (passcode-gated).
+create or replace function public.delete_student(pass text, p_id text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if pass <> 'changeme123' then return; end if;   -- <<< CHANGE THIS (same passcode as above)
+  delete from public.students where student_id = p_id;
+end; $$;
+revoke all on function public.delete_student(text,text) from public;
+grant execute on function public.delete_student(text,text) to anon;
+
+-- Teacher deletes ALL students (passcode-gated). Use with care.
+create or replace function public.delete_all_students(pass text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if pass <> 'changeme123' then return; end if;   -- <<< CHANGE THIS (same passcode as above)
+  delete from public.students;
+end; $$;
+revoke all on function public.delete_all_students(text) from public;
+grant execute on function public.delete_all_students(text) to anon;
+
 notify pgrst, 'reload schema';

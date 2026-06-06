@@ -38,8 +38,16 @@ Save, commit, push — and sync is live.
 - Open the app and tap **“Teacher view”** at the bottom (or add `#teacher` to the URL),
   enter the passcode from step 2.3, and you'll see every student and all their logs.
 
+## Updating later (e.g. to enable "Delete student")
+If you set this up before the delete feature existed, just re-run the setup:
+1. **SQL Editor** → **New query** → paste **all** of `supabase-setup.sql` again
+   (re-running is safe — it replaces the functions, your data is untouched).
+2. Remember to change `changeme123` to your passcode on every line that has it.
+3. Click **Run**. The teacher view's **Delete student** and **Delete all students**
+   buttons will now work.
+
 ## Notes
 - The **anon key is safe to be public** — the database only lets students add/update
-  their own row, and only the passcode-protected function can read everyone.
+  their own row, and only the passcode-protected functions can read or delete data.
 - Students restoring on a new device still use **Export/Import** (cloud is upload-only
   for them, by design, so no one but the teacher can read the class data).

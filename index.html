@@ -784,6 +784,36 @@
     .lacts { opacity: 0.6; }
     .gear:hover, .refresh:hover { transform: none; }
   }
+
+  /* tafsir history pill */
+  .ltaf, .ttag { color: var(--gold); }
+
+  /* weekly report tile (student) */
+  .report .rep-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 0.6rem; margin: 0.2rem 0 0.9rem; }
+  .rep-stat { background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 14px; padding: 0.7rem 0.6rem; text-align: center; }
+  .rep-stat .rv { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--ink); line-height: 1; }
+  .rep-stat .rl { font-size: 0.7rem; color: var(--ink-3); margin-top: 4px; }
+  .rep-copy { width: 100%; padding: 0.7rem; border-radius: 12px; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all .16s; }
+  .rep-copy:hover { border-color: var(--accent); }
+  .rep-copy svg { width: 17px; height: 17px; }
+
+  /* teacher: weekly report section reuses adm-chips; danger buttons */
+  .adm-rep-nav { display: flex; align-items: center; gap: 0.5rem; }
+  .adm-rep-nav button { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink-2); font-size: 1rem; line-height: 1; cursor: pointer; }
+  .adm-rep-nav button:hover { border-color: var(--accent); }
+  .adm-rep-nav .rng { font-size: 0.78rem; color: var(--ink-2); min-width: 92px; text-align: center; }
+  .adm-rep-copy { margin-top: 0.7rem; padding: 0.55rem 0.9rem; border-radius: 11px; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--ink); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+  .adm-rep-copy:hover { border-color: var(--accent); }
+  .adm-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+
+  /* teacher: delete (danger) buttons */
+  .admin-tools { display: flex; justify-content: flex-end; margin: 0 0 0.7rem; }
+  .adm-danger { padding: 0.5rem 0.85rem; border-radius: 11px; border: 1px solid #C9756533; background: #C976651a; color: #B0503C; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: all .16s; }
+  .adm-danger:hover { background: #C976652e; border-color: #C9756566; }
+  .adm-danger svg { width: 15px; height: 15px; }
+  .adm-danger-full { width: 100%; margin-top: 0.6rem; padding: 0.75rem; border-radius: 12px; border: 1px solid #C9756540; background: #C976651a; color: #B0503C; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all .16s; }
+  .adm-danger-full:hover { background: #C976652e; }
+  .adm-danger-full svg { width: 17px; height: 17px; }
 </style>
 </head>
 <body>
@@ -821,6 +851,11 @@
         <div class="hstat">
           <div class="big" id="wirdTotal">0</div>
           <div class="cap" id="capWird"><span class="ar">ورد سمعي</span> listens</div>
+        </div>
+        <div class="hdiv"></div>
+        <div class="hstat">
+          <div class="big" id="tafTotal">0</div>
+          <div class="cap" id="capTaf" data-i18n="tafsirCap">Tafsir</div>
         </div>
       </div>
     </div>
@@ -885,6 +920,17 @@
           <button id="wPlus" aria-label="more">+</button>
         </div>
       </div>
+      <div class="row-video">
+        <span class="vlabel">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 11h6M9 14h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span data-i18n="tafsirThisDay">Tafsir this day</span>
+        </span>
+        <div class="stepper">
+          <button id="tfMinus" aria-label="less">&minus;</button>
+          <span class="vc" id="tfCount">0</span>
+          <button id="tfPlus" aria-label="more">+</button>
+        </div>
+      </div>
       <button class="save" id="saveBtn" data-i18n="saveDay">Save day</button>
     </div>
 
@@ -933,6 +979,25 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- weekly report -->
+    <div class="tile span2 report" data-tile="report">
+      <div class="weekly-head">
+        <div class="left">
+          <div class="tile-label" data-i18n="weeklyReportTitle">This week's report</div>
+        </div>
+        <div class="wk-nav">
+          <button id="repPrev" aria-label="Previous week">&lsaquo;</button>
+          <span class="wk-range" id="repRange">—</span>
+          <button id="repNext" aria-label="Next week">&rsaquo;</button>
+        </div>
+      </div>
+      <div class="rep-stats" id="repStats"></div>
+      <button class="rep-copy" id="repCopy">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M4 16V5a1 1 0 011-1h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span data-i18n="copyReport">Copy report</span>
+      </button>
     </div>
 
     <!-- from teacher: note + homework -->
@@ -1013,6 +1078,9 @@
         <svg class="si" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         <input type="text" id="admSearch" data-i18n-ph="searchStudents" placeholder="Search students…">
       </div>
+      <div class="admin-tools" id="admTools" hidden>
+        <button class="adm-danger" id="admDeleteAll"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M7 7l1 12a1 1 0 001 1h6a1 1 0 001-1l1-12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="delAllStudents">Delete all students</span></button>
+      </div>
       <div class="admin-list" id="admList"></div>
     </div>
 
@@ -1078,6 +1146,7 @@
           <div class="qa-add-row">
             <label class="mini-check"><input type="checkbox" id="qaNewVideo"> <span data-i18n="alsoVideo">also +1 video</span></label>
             <label class="mini-check"><input type="checkbox" id="qaNewWird"> <span data-i18n="alsoWird">also +1 ورد</span></label>
+            <label class="mini-check"><input type="checkbox" id="qaNewTafsir"> <span data-i18n="alsoTafsir">also +1 tafsir</span></label>
           </div>
           <button class="qa-add-btn" id="qaAddBtn" data-i18n="addButton">+ Add button</button>
         </div>
@@ -1105,6 +1174,8 @@ const KEY = 'quran-tracker-log';
 const WKEY = 'quran-tracker-weekly';
 let videos = 0;
 let wird = 0;
+let tafsir = 0;
+let repOffset = 0;
 let filter = 'all';
 let view = 'list';
 let calMonth = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
@@ -1134,14 +1205,16 @@ const TILE_DEFS = [
   { key:'composer', label:'Log a day' },
   { key:'hadith',   label:'Hadith of the day' },
   { key:'weekly',   label:'Weekly tasks' },
+  { key:'report',   label:'Weekly report' },
   { key:'teacher',  label:'From your teacher' },
   { key:'history',  label:'History' },
 ];
 function defaultQuickActions() { return [
-  { id:'wird',  kind:'wird',  label:'+1', ar:'ورد سمعي' },
-  { id:'video', kind:'video', label:'+1 video' },
-  { id:'class', kind:'class', label:'Class day' },
-  { id:'rest',  kind:'rest',  label:'Rest day' },
+  { id:'wird',   kind:'wird',   label:'+1', ar:'ورد سمعي' },
+  { id:'tafsir', kind:'tafsir', label:'+1', ar:'تفسير' },
+  { id:'video',  kind:'video',  label:'+1 video' },
+  { id:'class',  kind:'class',  label:'Class day' },
+  { id:'rest',   kind:'rest',   label:'Rest day' },
 ]; }
 function loadPrefs() {
   let p; try { p = JSON.parse(localStorage.getItem(PKEY)); } catch { p = null; }
@@ -1386,6 +1459,26 @@ const STR = {
   syncSaving:{en:'Saving…',ar:'جارٍ الحفظ…'},
   syncOffline:{en:'Offline',ar:'غير متصل'},
   never:{en:'never',ar:'أبدًا'},
+  // tafsir
+  tafsirCap:{en:'Tafsir',ar:'تفسير'},
+  tafsirThisDay:{en:'Tafsir this day',ar:'تفسير هذا اليوم'},
+  tafsirRead:{en:'Tafsir',ar:'تفسير'},
+  qtag_tafsir:{en:'tafsir',ar:'تفسير'},
+  alsoTafsir:{en:'also +1 tafsir',ar:'مع +1 تفسير'},
+  st_tafsir:{en:'Tafsir',ar:'تفسير'},
+  // weekly report
+  weeklyReportTitle:{en:"This week's report",ar:'تقرير هذا الأسبوع'},
+  tile_report:{en:'Weekly report',ar:'التقرير الأسبوعي'},
+  copyReport:{en:'Copy report',ar:'نسخ التقرير'},
+  tasksWord:{en:'Tasks',ar:'المهام'},
+  // delete students
+  delAllStudents:{en:'Delete all students',ar:'حذف كل الطالبات'},
+  deleteStudent:{en:'Delete student',ar:'حذف الطالبة'},
+  c_delStudent:{en:'Delete {name} permanently? This cannot be undone.',ar:'حذف {name} نهائيًا؟ لا يمكن التراجع.'},
+  c_delAll1:{en:'Delete ALL students permanently? This cannot be undone.',ar:'حذف كل الطالبات نهائيًا؟ لا يمكن التراجع.'},
+  c_delAll2:{en:'Are you absolutely sure? Every student will be removed.',ar:'هل أنتِ متأكدة تمامًا؟ سيتم حذف جميع الطالبات.'},
+  t_studentDeleted:{en:'Student deleted',ar:'تم حذف الطالبة'},
+  t_allDeleted:{en:'All students deleted',ar:'تم حذف جميع الطالبات'},
 };
 function t(k){ const e = STR[k]; return e ? (e[prefs.lang] || e.en) : k; }
 function loc(){ return prefs.lang === 'ar' ? 'ar' : 'en-GB'; }
@@ -1424,6 +1517,8 @@ function init() {
   $('vMinus').onclick = () => { videos = Math.max(0, videos-1); $('vCount').textContent = videos; };
   $('wPlus').onclick  = () => { wird++; $('wCount').textContent = wird; };
   $('wMinus').onclick = () => { wird = Math.max(0, wird-1); $('wCount').textContent = wird; };
+  $('tfPlus').onclick  = () => { tafsir++; $('tfCount').textContent = tafsir; };
+  $('tfMinus').onclick = () => { tafsir = Math.max(0, tafsir-1); $('tfCount').textContent = tafsir; };
   $('entryDate').onchange = () => loadInto($('entryDate').value);
   document.querySelectorAll('.datequick button').forEach(b => b.onclick = () => {
     const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + parseInt(b.dataset.off,10));
@@ -1452,6 +1547,11 @@ function init() {
   $('wtaskSave').onclick = addWeeklyTask;
   $('wtaskCancel').onclick = () => showWtaskForm(false);
   $('wtaskName').addEventListener('keydown', e => { if (e.key === 'Enter') addWeeklyTask(); });
+
+  // weekly report
+  $('repPrev').onclick = () => { repOffset--; renderReport(); };
+  $('repNext').onclick = () => { if (repOffset < 0) { repOffset++; renderReport(); } };
+  $('repCopy').onclick = copyReport;
 
   // backup & restore
   $('exportBtn').onclick = exportBackup;
@@ -1496,6 +1596,7 @@ function init() {
   $('admBack').onclick = () => { $('admDetail').hidden = true; $('admBody').hidden = false; };
   $('admRefresh').onclick = refreshAdmin;
   $('admSearch').oninput = renderAdminList;
+  $('admDeleteAll').onclick = deleteAllStudents;
   window.addEventListener('hashchange', routeAdmin);
   $('ttBody').addEventListener('click', e => { const b = e.target.closest('.tt-hw'); if (b) toggleHomework(b.dataset.hw); });
 
@@ -1556,6 +1657,7 @@ function qaDisplay(a) {
   if (a.kind === 'class') return { label: t('qa_class') };
   if (a.kind === 'rest')  return { label: t('qa_rest') };
   if (a.kind === 'wird')  return { label: '+1', ar: 'ورد سمعي' };
+  if (a.kind === 'tafsir') return { label: '+1', ar: 'تفسير' };
   return { label: a.label, ar: a.ar };
 }
 function taskDisplay(tk) {
@@ -1578,14 +1680,15 @@ function renderHadith(animate) {
   } else { set(); }
 }
 
-function renderAll(){ render(); stats(); weekChart(); }
+function renderAll(){ render(); stats(); weekChart(); renderReport(); }
 
 function loadInto(date) {
   const e = load().find(x => x.date === date);
-  if (e) { $('entryText').value = e.text || ''; videos = e.videos || 0; wird = e.wird || 0; }
-  else   { $('entryText').value = ''; videos = 0; wird = 0; }
+  if (e) { $('entryText').value = e.text || ''; videos = e.videos || 0; wird = e.wird || 0; tafsir = e.tafsir || 0; }
+  else   { $('entryText').value = ''; videos = 0; wird = 0; tafsir = 0; }
   $('vCount').textContent = videos;
   $('wCount').textContent = wird;
+  $('tfCount').textContent = tafsir;
   updateDateQuick();
 }
 
@@ -1612,11 +1715,11 @@ function save() {
   const date = $('entryDate').value;
   const text = $('entryText').value.trim();
   if (!date) { toast(t('t_pickDate')); return; }
-  if (!text && !videos && !wird) { toast(t('t_writeWhat')); return; }
+  if (!text && !videos && !wird && !tafsir) { toast(t('t_writeWhat')); return; }
   const existed = load().some(x => x.date === date);
-  const fallback = videos ? t('videoWatched') : (wird ? t('wirdListened') : '');
-  upsert(date, e => { e.text = text || fallback; e.videos = videos; e.wird = wird; });
-  $('entryText').value = ''; videos = 0; wird = 0; $('vCount').textContent = 0; $('wCount').textContent = 0;
+  const fallback = videos ? t('videoWatched') : (wird ? t('wirdListened') : (tafsir ? t('tafsirRead') : ''));
+  upsert(date, e => { e.text = text || fallback; e.videos = videos; e.wird = wird; e.tafsir = tafsir; });
+  $('entryText').value = ''; videos = 0; wird = 0; tafsir = 0; $('vCount').textContent = 0; $('wCount').textContent = 0; $('tfCount').textContent = 0;
   $('entryDate').value = todayStr();
   updateDateQuick();
   renderAll();
@@ -1636,14 +1739,16 @@ function runQuick(a) {
   upsert(today, e => {
     if (a.kind === 'rest')  { e.text = t('restDay'); return; }
     if (a.kind === 'wird')  { e.wird = (e.wird||0)+1; if (!e.text) e.text = t('wirdListened'); return; }
+    if (a.kind === 'tafsir'){ e.tafsir = (e.tafsir||0)+1; if (!e.text) e.text = t('tafsirRead'); return; }
     if (a.kind === 'video') { e.videos = (e.videos||0)+1; if (!e.text) e.text = t('videoWatched'); return; }
     if (a.kind === 'class') { appendText(e, t('classWord')); return; }
     // custom
     const phrase = a.text || a.label;
     if (phrase) appendText(e, phrase);
-    if (a.video) e.videos = (e.videos||0)+1;
-    if (a.wird)  e.wird = (e.wird||0)+1;
-    if (!e.text) e.text = phrase || (a.video ? t('videoWatched') : (a.wird ? t('wirdListened') : ''));
+    if (a.video)  e.videos = (e.videos||0)+1;
+    if (a.wird)   e.wird = (e.wird||0)+1;
+    if (a.tafsir) e.tafsir = (e.tafsir||0)+1;
+    if (!e.text) e.text = phrase || (a.video ? t('videoWatched') : (a.wird ? t('wirdListened') : (a.tafsir ? t('tafsirRead') : '')));
   });
   if ($('entryDate').value === today) loadInto(today);
   renderAll();
@@ -1652,6 +1757,7 @@ function runQuick(a) {
 
 function qaIcon(kind) {
   if (kind === 'wird')  return `<svg viewBox="0 0 24 24" fill="none"><path d="M5 13v-1a7 7 0 0114 0v1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="3.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4" height="6.5" rx="1.6" fill="currentColor"/></svg>`;
+  if (kind === 'tafsir') return `<svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 11h6M9 14h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
   if (kind === 'video') return `<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 9.5L15 12L10 14.5V9.5Z" fill="currentColor"/></svg>`;
   if (kind === 'class') return `<svg viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 9.5V14c0 1.1 2.2 2 5 2s5-.9 5-2V9.5" stroke="currentColor" stroke-width="1.6"/></svg>`;
   if (kind === 'rest')  return `<svg viewBox="0 0 24 24" fill="none"><path d="M13 4a8 8 0 108 8 6 6 0 01-8-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
@@ -1665,7 +1771,7 @@ function renderQuickActions() {
   }
   grid.innerHTML = prefs.quickActions.map(a => {
     const d = qaDisplay(a);
-    return `<button class="qa ${a.kind==='wird'||a.kind==='video'?'gold':''}" data-id="${a.id}">
+    return `<button class="qa ${a.kind==='wird'||a.kind==='video'||a.kind==='tafsir'?'gold':''}" data-id="${a.id}">
       ${qaIcon(a.kind)}
       <span>${esc(d.label)}${d.ar?` <span class="ar">${esc(d.ar)}</span>`:''}</span>
     </button>`;
@@ -1724,7 +1830,7 @@ function renderQaList() {
   const list = $('qaList');
   if (!prefs.quickActions.length) { list.innerHTML = `<div class="set-hint" style="margin:0">No buttons yet — add one below.</div>`; return; }
   const tagFor = a => a.kind === 'custom'
-    ? [t('tag_note'), a.video && '+'+t('videos'), a.wird && '+ورد'].filter(Boolean).join(' ')
+    ? [t('tag_note'), a.video && '+'+t('videos'), a.wird && '+ورد', a.tafsir && '+'+t('qtag_tafsir')].filter(Boolean).join(' ')
     : t('qtag_' + a.kind);
   list.innerHTML = prefs.quickActions.map(a => {
     const d = qaDisplay(a);
@@ -1750,9 +1856,9 @@ function addQuickAction() {
   const label = $('qaNewLabel').value.trim();
   if (!label) { toast(t('t_buttonName')); return; }
   prefs.quickActions.push({ id:'c'+Date.now(), kind:'custom', label, text:label,
-                            video: $('qaNewVideo').checked, wird: $('qaNewWird').checked });
+                            video: $('qaNewVideo').checked, wird: $('qaNewWird').checked, tafsir: $('qaNewTafsir').checked });
   savePrefs();
-  $('qaNewLabel').value = ''; $('qaNewVideo').checked = false; $('qaNewWird').checked = false;
+  $('qaNewLabel').value = ''; $('qaNewVideo').checked = false; $('qaNewWird').checked = false; $('qaNewTafsir').checked = false;
   renderQaList(); renderQuickActions();
   toast(t('t_buttonAdded'));
 }
@@ -1803,7 +1909,8 @@ function listHtml(data, runTotal) {
     const isRest = isRestText(e.text);
     const vid = e.videos ? `<span class="lvid">${vidIcon()} +${e.videos} <span class="lt">· ${runTotal[e.date]}</span></span>` : '';
     const wd  = e.wird ? `<span class="lwird">${hpIcon()} ${e.wird}×</span>` : '';
-    const pills = (vid || wd) ? `<div class="lpills">${wd}${vid}</div>` : `<span class="lvid none">—</span>`;
+    const tf  = e.tafsir ? `<span class="ltaf">${bookIcon()} ${e.tafsir}×</span>` : '';
+    const pills = (vid || wd || tf) ? `<div class="lpills">${wd}${tf}${vid}</div>` : `<span class="lvid none">—</span>`;
     html += `
       <div class="lrow ${isRest?'rest':''}" style="animation-delay:${delay}ms">
         <div class="lday"><span class="ln">${d.getDate()}</span><span class="lmo">${d.toLocaleDateString(loc(),{month:'short'})}</span></div>
@@ -1831,6 +1938,7 @@ function cardsHtml(data, runTotal) {
     const isRest = isRestText(e.text);
     const vtag = e.videos ? `<span class="vtag">${vidIcon()} +${e.videos} <span class="tot">· ${runTotal[e.date]} ${t('total')}</span></span>` : '';
     const wtag = e.wird ? `<span class="wtag">${hpIcon()} ${e.wird}× <span style="opacity:.7">ورد</span></span>` : '';
+    const ttag = e.tafsir ? `<span class="ttag">${bookIcon()} ${e.tafsir}× <span style="opacity:.7">${esc(t('qtag_tafsir'))}</span></span>` : '';
     html += `
       <div class="entry ${isRest?'rest':''}" style="animation-delay:${delay}ms">
         <div class="acts">
@@ -1842,7 +1950,7 @@ function cardsHtml(data, runTotal) {
         <div class="body">
           <div class="dow">${d.toLocaleDateString(loc(),{weekday:'long'})}</div>
           <div class="text">${esc(e.text||'')}</div>
-          ${vtag}${wtag}
+          ${vtag}${wtag}${ttag}
         </div>
       </div>`;
     delay += 30;
@@ -1872,17 +1980,20 @@ function renderCalendar(all, runTotal) {
     const isRest = e && isRestText(e.text);
     const hasVid = e && e.videos > 0;
     const hasWird = e && e.wird > 0;
+    const hasTaf = e && e.tafsir > 0;
     let cls = 'cal-cell inmonth';
     if (hasVid) cls += ' has-video'; else if (e) cls += isRest ? ' rest' : ' logged';
     if (isToday) cls += ' today';
     let mark = '';
     if (hasVid) mark = `<span class="vbadge">+${e.videos}</span>`;
     else if (hasWird) mark = `<span class="wbadge">${e.wird}× ورد</span>`;
+    else if (hasTaf) mark = `<span class="wbadge">${e.tafsir}× ${esc(t('qtag_tafsir'))}</span>`;
     else if (isRest) mark = `<span class="rdot"></span>`;
     else if (e) mark = `<span class="ckdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2L5 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
     const extras = [];
     if (e && e.videos) extras.push(`+${e.videos} ${t('videos')}`);
     if (e && e.wird) extras.push(`${e.wird}× ورد سمعي`);
+    if (e && e.tafsir) extras.push(`${e.tafsir}× ${t('qtag_tafsir')}`);
     const title = e ? `${esc(e.text||'')}${extras.length?` (${extras.join(', ')})`:''}` : t('tapToLog');
     html += `<div class="${cls}" title="${title}" onclick="editEntry('${ds}')"><span class="cd">${day}</span>${mark}</div>`;
   }
@@ -1899,6 +2010,7 @@ function stats() {
   const data = load();
   $('vidTotal').textContent  = data.reduce((s,e)=>s+(e.videos||0),0);
   $('wirdTotal').textContent = data.reduce((s,e)=>s+(e.wird||0),0);
+  $('tafTotal').textContent  = data.reduce((s,e)=>s+(e.tafsir||0),0);
   $('daysLogged').textContent = data.length;
   $('streak').textContent = streak(data);
 }
@@ -1930,7 +2042,56 @@ function weekChart() {
 
 function vidIcon(){ return `<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 9.5L15 12L10 14.5V9.5Z" fill="currentColor"/></svg>`; }
 function hpIcon(){ return `<svg viewBox="0 0 24 24" fill="none"><path d="M5 13v-1a7 7 0 0114 0v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.5" y="13" width="4" height="6.2" rx="1.6" fill="currentColor"/><rect x="16.5" y="13" width="4" height="6.2" rx="1.6" fill="currentColor"/></svg>`; }
+function bookIcon(){ return `<svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 11h6M9 14h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`; }
 function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+/* ---------- weekly report (student + teacher shared core) ---------- */
+function weekStartFor(offset) { const d = mondayOf(new Date()); d.setDate(d.getDate() + offset*7); return d; }
+function summarizeWeek(log, ws) {
+  const start = new Date(ws); start.setHours(0,0,0,0);
+  const end = new Date(start); end.setDate(end.getDate()+6); end.setHours(23,59,59,999);
+  const inW = (log||[]).filter(e => { const d = new Date(e.date+'T00:00:00'); return d >= start && d <= end; });
+  const sum = k => inW.reduce((a,e)=>a+(e[k]||0),0);
+  return { start, end, days: inW.length, videos: sum('videos'), wird: sum('wird'), tafsir: sum('tafsir') };
+}
+function weekLabelRange(ws) {
+  const end = new Date(ws); end.setDate(end.getDate()+6);
+  return `${ws.toLocaleDateString(loc(),{day:'numeric',month:'short'})} – ${end.toLocaleDateString(loc(),{day:'numeric',month:'short'})}`;
+}
+function reportText(name, ws, r, tasksStr) {
+  const lines = [`${t('weeklyReportTitle')} — ${weekLabelRange(ws)}`];
+  if (name) lines.push(name);
+  lines.push('', `${t('daysLogged')}: ${r.days}`, `${t('st_videos')}: ${r.videos}`,
+             `${t('st_wird')}: ${r.wird}`, `${t('st_tafsir')}: ${r.tafsir}`);
+  if (tasksStr) lines.push(`${t('tasksWord')}: ${tasksStr}`);
+  return lines.join('\n');
+}
+function copyTextOut(text) {
+  const ok = () => toast(t('t_copied'));
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok).catch(() => fallbackCopy(text, ok));
+  else fallbackCopy(text, ok);
+}
+function studentWeekTasks(ws) {
+  const key = iso(ws); const done = wLoad()[key] || {};
+  const tasks = prefs.weeklyTasks.filter(tk => tk.recurring || tk.week === key);
+  return { done: tasks.filter(tk => done[tk.id]).length, total: tasks.length };
+}
+function renderReport() {
+  const ws = weekStartFor(repOffset);
+  const r = summarizeWeek(load(), ws);
+  $('repRange').textContent = weekLabelRange(ws);
+  $('repNext').disabled = repOffset >= 0;
+  const tk = studentWeekTasks(ws);
+  const item = (v, k) => `<div class="rep-stat"><div class="rv">${v}</div><div class="rl">${t(k)}</div></div>`;
+  $('repStats').innerHTML = item(r.days,'daysLogged') + item(r.videos,'st_videos')
+    + item(r.wird,'st_wird') + item(r.tafsir,'st_tafsir') + item(`${tk.done}/${tk.total}`,'tasksWord');
+}
+function copyReport() {
+  const ws = weekStartFor(repOffset);
+  const r = summarizeWeek(load(), ws);
+  const tk = studentWeekTasks(ws);
+  copyTextOut(reportText((prefs.name||'').trim(), ws, r, `${tk.done}/${tk.total}`));
+}
 
 /* ---------- weekly checklist (editable) ---------- */
 function weekTasks() {
@@ -2018,6 +2179,7 @@ function copyAsText() {
     const ex = [];
     if (e.videos) ex.push(`videos +${e.videos}, total ${rt[e.date]}`);
     if (e.wird)   ex.push(`ورد سمعي ×${e.wird}`);
+    if (e.tafsir) ex.push(`تفسير ×${e.tafsir}`);
     if (ex.length) line += ` (${ex.join('; ')})`;
     return line;
   });
@@ -2037,6 +2199,7 @@ function fallbackCopy(text, ok) {
 /* ---------- teacher admin view ---------- */
 let ADMIN = [];
 let admPassCache = '';
+let admRepOffset = 0;
 function goTeacher() { location.hash = 'teacher'; }
 function leaveTeacher() {
   if (location.hash === '#teacher') history.replaceState(null, '', location.pathname + location.search);
@@ -2104,6 +2267,7 @@ function renderAdminStats() {
   const seg = (icon, v, k) => `<div class="sm"><div class="ic">${icon}</div><div class="v">${v}</div><div class="l">${t(k)}</div></div>`;
   $('admStats').innerHTML = seg(ic.users, ADMIN.length, 'st_students') + seg(vidIcon(), totVid, 'st_videos') + seg(hpIcon(), totWird, 'st_wird') + seg(ic.spark, active, 'st_active');
   $('admCount').hidden = false; $('admCount').textContent = ADMIN.length;
+  $('admTools').hidden = ADMIN.length === 0;
 }
 function renderAdminList() {
   const q = ($('admSearch').value || '').trim().toLowerCase();
@@ -2150,6 +2314,18 @@ function openStudent(id) {
       <div class="adm-chip">${fire}<span class="cn">${stk}</span><span class="cl">${t('dayStreak')}</span></div>
     </div>
     <div class="adm-section">
+      <div class="adm-sec-head">
+        <div class="adm-sec-title">${cal} ${t('weeklyReportTitle')}</div>
+        <div class="adm-rep-nav">
+          <button id="admRepPrev" aria-label="Previous week">&lsaquo;</button>
+          <span class="rng" id="admRepRange">—</span>
+          <button id="admRepNext" aria-label="Next week">&rsaquo;</button>
+        </div>
+      </div>
+      <div class="adm-chips" id="admRepStats"></div>
+      <button class="adm-rep-copy" id="admRepCopy">${t('copyReport')}</button>
+    </div>
+    <div class="adm-section">
       <div class="adm-sec-title">${pen} ${t('noteToStudent')}</div>
       <textarea class="adm-note" id="admNote" placeholder="${t('notePlaceholder')}">${esc(s.teacher_note || '')}</textarea>
     </div>
@@ -2163,8 +2339,31 @@ function openStudent(id) {
       </div>
     </div>
     <button class="adm-save" id="admSaveTeacher">${t('saveForStudent')}</button>
-    <div class="adm-saved" id="admSaved"></div>`;
+    <div class="adm-saved" id="admSaved"></div>
+    <button class="adm-danger-full" id="admDeleteStudent"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M7 7l1 12a1 1 0 001 1h6a1 1 0 001-1l1-12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>${t('deleteStudent')}</button>`;
   renderAdmHw(s);
+  admRepOffset = 0;
+  const repChip = (icon, v, k) => `<div class="adm-chip">${icon}<span class="cn">${v}</span><span class="cl">${t(k)}</span></div>`;
+  function renderAdmReport() {
+    const ws = weekStartFor(admRepOffset);
+    const r = summarizeWeek(s.log || [], ws);
+    $('admRepRange').textContent = weekLabelRange(ws);
+    $('admRepNext').disabled = admRepOffset >= 0;
+    const wk = (s.weekly && s.weekly[iso(ws)]) || {};
+    const tasksDone = Object.values(wk).filter(Boolean).length;
+    $('admRepStats').innerHTML = repChip(cal, r.days,'daysLogged') + repChip(vidIcon(), r.videos,'st_videos')
+      + repChip(hpIcon(), r.wird,'st_wird') + repChip(bookIcon(), r.tafsir,'st_tafsir') + repChip(book, tasksDone,'tasksWord');
+  }
+  $('admRepPrev').onclick = () => { admRepOffset--; renderAdmReport(); };
+  $('admRepNext').onclick = () => { if (admRepOffset < 0) { admRepOffset++; renderAdmReport(); } };
+  $('admRepCopy').onclick = () => {
+    const ws = weekStartFor(admRepOffset);
+    const r = summarizeWeek(s.log || [], ws);
+    const wk = (s.weekly && s.weekly[iso(ws)]) || {};
+    copyTextOut(reportText(s.name || '', ws, r, String(Object.values(wk).filter(Boolean).length)));
+  };
+  renderAdmReport();
+  $('admDeleteStudent').onclick = () => deleteStudent(s);
   $('admHwAdd').onclick = () => {
     const txt = $('admHwText').value.trim(); if (!txt) return;
     admHw.push({ id: 'h' + Date.now().toString(36) + Math.floor(Math.random()*1000), text: txt, due: $('admHwDue').value || '' });
@@ -2196,6 +2395,31 @@ async function saveTeacherData(s) {
     else $('admSaved').textContent = t('wrongPass');
   } catch (e) { $('admSaved').textContent = t('wrongPass'); }
 }
+async function deleteStudent(s) {
+  if (!cloudOn || !admPassCache) return;
+  if (!confirm(t('c_delStudent').replace('{name}', s.name || ''))) return;
+  try {
+    const res = await cloudFetch('/rest/v1/rpc/delete_student', { method: 'POST', body: JSON.stringify({ pass: admPassCache, p_id: s.student_id }) });
+    if (!res.ok) { toast(t('wrongPass')); return; }
+    ADMIN = ADMIN.filter(x => x.student_id !== s.student_id);
+    $('admDetail').hidden = true; $('admBody').hidden = false;
+    renderAdminStats(); renderAdminList();
+    toast(t('t_studentDeleted'));
+  } catch (e) { toast(t('wrongPass')); }
+}
+async function deleteAllStudents() {
+  if (!cloudOn || !admPassCache) return;
+  if (!ADMIN.length) return;
+  if (!confirm(t('c_delAll1'))) return;
+  if (!confirm(t('c_delAll2'))) return;
+  try {
+    const res = await cloudFetch('/rest/v1/rpc/delete_all_students', { method: 'POST', body: JSON.stringify({ pass: admPassCache }) });
+    if (!res.ok) { toast(t('wrongPass')); return; }
+    ADMIN = [];
+    renderAdminStats(); renderAdminList();
+    toast(t('t_allDeleted'));
+  } catch (e) { toast(t('wrongPass')); }
+}
 function adminLogHtml(log) {
   if (!log.length) return `<div class="empty"><p>${t('noDays')}</p></div>`;
   const asc = [...log].sort((a, b) => a.date.localeCompare(b.date));
@@ -2209,7 +2433,8 @@ function adminLogHtml(log) {
     const isRest = isRestText(e.text);
     const vid = e.videos ? `<span class="lvid">${vidIcon()} +${e.videos} <span class="lt">· ${rt[e.date]}</span></span>` : '';
     const wd  = e.wird ? `<span class="lwird">${hpIcon()} ${e.wird}×</span>` : '';
-    const pills = (vid || wd) ? `<div class="lpills">${wd}${vid}</div>` : `<span class="lvid none">—</span>`;
+    const tf  = e.tafsir ? `<span class="ltaf">${bookIcon()} ${e.tafsir}×</span>` : '';
+    const pills = (vid || wd || tf) ? `<div class="lpills">${wd}${tf}${vid}</div>` : `<span class="lvid none">—</span>`;
     html += `<div class="lrow ${isRest?'rest':''}">
       <div class="lday"><span class="ln">${d.getDate()}</span><span class="lmo">${d.toLocaleDateString(loc(),{month:'short'})}</span></div>
       <div class="lmain"><div class="ldow">${d.toLocaleDateString(loc(),{weekday:'long'})}</div><div class="ltext">${esc(e.text||'')}</div></div>
