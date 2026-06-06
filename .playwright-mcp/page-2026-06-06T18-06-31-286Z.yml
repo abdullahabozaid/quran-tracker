@@ -1,0 +1,214 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: ﷽
+        - generic [ref=e6]: Assalāmu ʿalaykum
+        - heading "Quran Tracker" [level=1] [ref=e7]
+      - generic [ref=e8]:
+        - generic [ref=e9]: Sat 6 June
+        - button "Teacher view" [ref=e10] [cursor=pointer]:
+          - img [ref=e11]
+        - button "Switch language" [ref=e14] [cursor=pointer]: ع
+        - button "Customise dashboard" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: "0"
+          - generic [ref=e24]: Videos watched
+        - generic [ref=e26]:
+          - generic [ref=e27]: "0"
+          - generic [ref=e28]: ورد سمعي listens
+        - generic [ref=e30]:
+          - generic [ref=e31]: "0"
+          - generic [ref=e32]: Tafsir
+      - generic [ref=e33]:
+        - generic [ref=e34]: 🔥
+        - generic [ref=e35]: "0"
+        - generic [ref=e36]: Day streak
+      - generic [ref=e37]:
+        - generic [ref=e38]: 📖
+        - generic [ref=e39]: "0"
+        - generic [ref=e40]: Days logged
+      - generic [ref=e41]:
+        - generic [ref=e42]: Quick actions
+        - generic [ref=e43]:
+          - button "+1 ورد سمعي" [ref=e44] [cursor=pointer]:
+            - img [ref=e45]
+            - generic [ref=e49]: +1 ورد سمعي
+          - button "+1 تفسير" [ref=e50] [cursor=pointer]:
+            - img [ref=e51]
+            - generic [ref=e54]: +1 تفسير
+          - button "+1 video" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: +1 video
+          - button "Class day" [ref=e60] [cursor=pointer]:
+            - img [ref=e61]
+            - generic [ref=e64]: Class day
+          - button "Rest day" [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+            - generic [ref=e68]: Rest day
+      - generic [ref=e69]:
+        - generic [ref=e70]: This week
+        - generic [ref=e71]:
+          - generic [ref=e75]: Sun
+          - generic [ref=e79]: Mon
+          - generic [ref=e83]: Tue
+          - generic [ref=e87]: Wed
+          - generic [ref=e91]: Thu
+          - generic [ref=e95]: Fri
+          - generic [ref=e99]: Sat
+      - generic [ref=e100]:
+        - generic [ref=e101]: Log a day
+        - generic [ref=e102]:
+          - textbox [ref=e103]: 2026-06-06
+          - generic [ref=e104]:
+            - button "Yesterday" [ref=e105] [cursor=pointer]
+            - button "Today" [ref=e106] [cursor=pointer]
+            - button "Tomorrow" [ref=e107] [cursor=pointer]
+        - textbox "What did you do? e.g. class summary + video watched" [ref=e108]
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - img [ref=e111]
+            - generic [ref=e114]: Videos this day
+          - generic [ref=e115]:
+            - button "less" [ref=e116] [cursor=pointer]: −
+            - generic [ref=e117]: "0"
+            - button "more" [ref=e118] [cursor=pointer]: +
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - img [ref=e121]
+            - generic [ref=e125]: ورد سمعي listens
+          - generic [ref=e126]:
+            - button "less" [ref=e127] [cursor=pointer]: −
+            - generic [ref=e128]: "0"
+            - button "more" [ref=e129] [cursor=pointer]: +
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - img [ref=e132]
+            - generic [ref=e135]: Tafsir this day
+          - generic [ref=e136]:
+            - button "less" [ref=e137] [cursor=pointer]: −
+            - generic [ref=e138]: "0"
+            - button "more" [ref=e139] [cursor=pointer]: +
+        - button "Save day" [ref=e140] [cursor=pointer]
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]: Hadith of the day
+          - button "Another hadith" [ref=e144] [cursor=pointer]:
+            - img [ref=e145]
+        - generic [ref=e147]:
+          - generic [ref=e148]: “
+          - paragraph [ref=e149]: Whoever does not show mercy to people, Allah will not show mercy to him.
+          - generic [ref=e150]:
+            - generic [ref=e151]:
+              - generic [ref=e152]: Prophet Muhammad ﷺ
+              - generic [ref=e153]: Narrated by Jarir ibn Abdullah
+            - generic [ref=e154]: Sahih al-Bukhari 7376 · Muslim 2319
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]:
+            - generic [ref=e158]: This week's tasks
+            - generic [ref=e159]: 0/5
+          - generic [ref=e160]:
+            - button "Previous week" [ref=e161] [cursor=pointer]: ‹
+            - generic [ref=e162]: 1 Jun – 7 Jun
+            - button "Next week" [ref=e163] [cursor=pointer]: ›
+        - generic [ref=e164]:
+          - generic [ref=e165] [cursor=pointer]:
+            - button "Remove task" [ref=e166]: ×
+            - img [ref=e168]
+            - generic [ref=e170]:
+              - text: Sunday class
+              - generic [ref=e171]: تسميع
+          - generic [ref=e172] [cursor=pointer]:
+            - button "Remove task" [ref=e173]: ×
+            - img [ref=e175]
+            - generic [ref=e177]: Recording summary
+          - generic [ref=e178] [cursor=pointer]:
+            - button "Remove task" [ref=e179]: ×
+            - img [ref=e181]
+            - generic [ref=e183]: Tajweed lecture
+          - generic [ref=e184] [cursor=pointer]:
+            - button "Remove task" [ref=e185]: ×
+            - img [ref=e187]
+            - generic [ref=e189]: Tajweed summary
+          - generic [ref=e190] [cursor=pointer]:
+            - button "Remove task" [ref=e191]: ×
+            - img [ref=e193]
+            - generic [ref=e195]: Tajweed test
+          - generic [ref=e196] [cursor=pointer]:
+            - generic [ref=e197]: +
+            - generic [ref=e198]: Add task
+      - generic [ref=e199]:
+        - generic [ref=e200]:
+          - generic [ref=e202]: This week's report
+          - generic [ref=e203]:
+            - button "Previous week" [ref=e204] [cursor=pointer]: ‹
+            - generic [ref=e205]: 1 Jun – 7 Jun
+            - button "Next week" [disabled] [ref=e206] [cursor=pointer]: ›
+        - generic [ref=e207]:
+          - generic [ref=e208]:
+            - generic [ref=e209]: "0"
+            - generic [ref=e210]: Days logged
+          - generic [ref=e211]:
+            - generic [ref=e212]: "0"
+            - generic [ref=e213]: Videos
+          - generic [ref=e214]:
+            - generic [ref=e215]: "0"
+            - generic [ref=e216]: Wird
+          - generic [ref=e217]:
+            - generic [ref=e218]: "0"
+            - generic [ref=e219]: Tafsir
+          - generic [ref=e220]:
+            - generic [ref=e221]: 0/5
+            - generic [ref=e222]: Tasks
+        - button "Copy report" [ref=e223] [cursor=pointer]:
+          - img [ref=e224]
+          - generic [ref=e227]: Copy report
+      - generic [ref=e228]:
+        - generic [ref=e229]: From your teacher
+        - generic [ref=e231]: No homework or notes yet.
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e234]: History
+          - generic [ref=e235]:
+            - button "List" [ref=e236] [cursor=pointer]
+            - button "Cards" [ref=e237] [cursor=pointer]
+            - button "Calendar" [ref=e238] [cursor=pointer]
+        - generic [ref=e239]:
+          - generic [ref=e240]:
+            - button "All" [ref=e241] [cursor=pointer]
+            - button "Month" [ref=e242] [cursor=pointer]
+            - button "Week" [ref=e243] [cursor=pointer]
+          - generic [ref=e244]:
+            - button "Previous month" [ref=e245] [cursor=pointer]: ‹
+            - generic [ref=e246]: —
+            - button "Next month" [ref=e247] [cursor=pointer]: ›
+        - generic [ref=e249]:
+          - img [ref=e250]
+          - paragraph [ref=e253]: No days logged yet — use Quick actions or Log a day.
+    - generic [ref=e254]:
+      - button "Export backup" [ref=e255] [cursor=pointer]:
+        - img [ref=e256]
+        - generic [ref=e259]: Export backup
+      - button "Import" [ref=e260] [cursor=pointer]:
+        - img [ref=e261]
+        - generic [ref=e264]: Import
+      - button "Copy as text" [ref=e265] [cursor=pointer]:
+        - img [ref=e266]
+        - generic [ref=e269]: Copy as text
+      - generic [ref=e270]: Saved on this device only — export a backup to keep it safe or move to another device.
+  - generic [ref=e273]:
+    - generic [ref=e274]: ﷽
+    - heading "Welcome" [level=3] [ref=e275]
+    - paragraph [ref=e276]: Please write your full name to begin
+    - textbox "Your full name" [active] [ref=e277]
+    - generic [ref=e278]:
+      - button "English" [ref=e279] [cursor=pointer]
+      - button "العربية" [ref=e280] [cursor=pointer]
+    - button "Continue" [ref=e281] [cursor=pointer]
+  - generic [ref=e282]:
+    - img [ref=e283]
+    - generic [ref=e285]: Saved

@@ -51,14 +51,15 @@ revoke all on function public.get_student(text) from public;
 grant execute on function public.get_student(text) to anon;
 
 -- Teacher reads everyone — only when the passcode matches.
+-- Wrong passcode RAISES (PostgREST returns 401) so the client can tell a wrong
+-- passcode apart from a correct passcode on an empty database.
 create or replace function public.get_all_students(pass text)
 returns setof public.students language plpgsql security definer set search_path = public as $$
 begin
-  if pass = 'changeme123' then          -- <<< CHANGE THIS to your own teacher passcode
-    return query select * from public.students order by updated_at desc;
-  else
-    return;
+  if pass <> 'changeme123' then          -- <<< CHANGE THIS to your own teacher passcode
+    raise exception 'unauthorized' using errcode = '42501';
   end if;
+  return query select * from public.students order by updated_at desc;
 end; $$;
 revoke all on function public.get_all_students(text) from public;
 grant execute on function public.get_all_students(text) to anon;
@@ -67,7 +68,9 @@ grant execute on function public.get_all_students(text) to anon;
 create or replace function public.set_teacher_data(pass text, p_id text, p_note text, p_homework jsonb)
 returns void language plpgsql security definer set search_path = public as $$
 begin
-  if pass <> 'changeme123' then return; end if;   -- <<< CHANGE THIS (same passcode as above)
+  if pass <> 'changeme123' then                   -- <<< CHANGE THIS (same passcode as above)
+    raise exception 'unauthorized' using errcode = '42501';
+  end if;
   update public.students set teacher_note = p_note, homework = coalesce(p_homework,'[]'::jsonb) where student_id = p_id;
 end; $$;
 revoke all on function public.set_teacher_data(text,text,text,jsonb) from public;

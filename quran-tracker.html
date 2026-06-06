@@ -2226,10 +2226,10 @@ async function adminLogin() {
   const pass = $('admPass').value.trim();
   $('admMsg').textContent = t('loading');
   try {
-    const data = await fetchStudents(pass);
-    if (!data || !data.length) { ADMIN = []; admPassCache = pass; $('admMsg').textContent = t('wrongPass'); return; }
-    ADMIN = data; admPassCache = pass; $('admMsg').textContent = '';
-    showAdminBody();
+    const data = await fetchStudents(pass);   // throws on wrong passcode (RPC raises → 4xx)
+    ADMIN = Array.isArray(data) ? data : [];
+    admPassCache = pass; $('admMsg').textContent = '';
+    showAdminBody();                          // empty list is fine — shows "no students yet"
   } catch (e) { $('admMsg').textContent = t('wrongPass'); }
 }
 async function refreshAdmin() {
