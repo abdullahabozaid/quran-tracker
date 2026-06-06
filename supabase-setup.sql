@@ -99,7 +99,7 @@ begin
   if pass <> 'changeme123' then                   -- <<< CHANGE THIS (same passcode as above)
     raise exception 'unauthorized' using errcode = '42501';
   end if;
-  delete from public.students;
+  delete from public.students where true;   -- explicit WHERE (DBs may block unqualified DELETE)
   get diagnostics n = row_count;
   return n;
 end; $$;
