@@ -74,21 +74,34 @@ revoke all on function public.set_teacher_data(text,text,text,jsonb) from public
 grant execute on function public.set_teacher_data(text,text,text,jsonb) to anon;
 
 -- Teacher deletes one student (passcode-gated).
+-- Wrong passcode RAISES (PostgREST returns 401) so the client never shows a
+-- false "deleted"; returns the number of rows actually removed.
 create or replace function public.delete_student(pass text, p_id text)
-returns void language plpgsql security definer set search_path = public as $$
+returns integer language plpgsql security definer set search_path = public as $$
+declare n integer;
 begin
-  if pass <> 'changeme123' then return; end if;   -- <<< CHANGE THIS (same passcode as above)
+  if pass <> 'changeme123' then                   -- <<< CHANGE THIS (same passcode as above)
+    raise exception 'unauthorized' using errcode = '42501';
+  end if;
   delete from public.students where student_id = p_id;
+  get diagnostics n = row_count;
+  return n;
 end; $$;
 revoke all on function public.delete_student(text,text) from public;
 grant execute on function public.delete_student(text,text) to anon;
 
 -- Teacher deletes ALL students (passcode-gated). Use with care.
+-- Wrong passcode RAISES (PostgREST returns 401); returns rows removed.
 create or replace function public.delete_all_students(pass text)
-returns void language plpgsql security definer set search_path = public as $$
+returns integer language plpgsql security definer set search_path = public as $$
+declare n integer;
 begin
-  if pass <> 'changeme123' then return; end if;   -- <<< CHANGE THIS (same passcode as above)
+  if pass <> 'changeme123' then                   -- <<< CHANGE THIS (same passcode as above)
+    raise exception 'unauthorized' using errcode = '42501';
+  end if;
   delete from public.students;
+  get diagnostics n = row_count;
+  return n;
 end; $$;
 revoke all on function public.delete_all_students(text) from public;
 grant execute on function public.delete_all_students(text) to anon;
