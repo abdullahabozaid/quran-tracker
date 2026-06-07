@@ -1,0 +1,31 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Publish only the app files (not docs / SQL / config)
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp index.html quran-tracker.html _site/
+
+      - name: Deploy to Netlify
+        run: >
+          npx --yes netlify-cli@17 deploy
+          --prod
+          --dir=_site
+          --site="$NETLIFY_SITE_ID"
+          --auth="$NETLIFY_AUTH_TOKEN"
+          --message "CI deploy $GITHUB_SHA"
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
